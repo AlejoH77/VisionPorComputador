@@ -458,6 +458,33 @@ public class Metodos {
         }
         return imagenF;
     }
+    
+    public BufferedImage Libre(double pos00,double pos01,double pos02,double pos10,double pos11,double pos12,double pos20,double pos21,double pos22) throws IOException{
+        BufferedImage imagenO = ImageIO.read(file);
+        BufferedImage imagenF = ImageIO.read(file);
+        int alto = imagenO.getHeight();
+        int ancho = imagenO.getWidth();      
+        MatrizTransformacionD[0][0]=pos00;
+        MatrizTransformacionD[0][1]=pos01;
+        MatrizTransformacionD[1][1]=pos02;
+        MatrizTransformacionD[1][0]=pos10;
+        MatrizTransformacionD[2][0]=pos11;
+        MatrizTransformacionD[2][1]=pos12;
+        MatrizTransformacionD[1][0]=pos20;
+        MatrizTransformacionD[2][0]=pos21;
+        MatrizTransformacionD[2][1]=pos22;
+        for(int i=0;i<ancho;i++){
+            for(int j=0;j<alto;j++){
+                Color c = new Color(imagenO.getRGB(i, j));
+                int ni = (int) (DMultPColumna(MatrizTransformacionD,i,j,1));
+                int nj = (int) (DMultSColumna(MatrizTransformacionD,i,j,1));
+                if(ni<ancho && nj<alto && ni>=0 && nj>=0){
+                    imagenF.setRGB(ni, nj, c.getRGB());
+                }                              
+            }
+        }
+        return imagenF;
+    }
      
     public void mostraHistograma() throws IOException{
         BufferedImage imagen = ImageIO.read(file);
