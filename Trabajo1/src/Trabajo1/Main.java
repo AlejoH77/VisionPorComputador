@@ -115,6 +115,9 @@ public class Main extends JFrame{
                 JMenuItem rotar = new JMenuItem("Rotar");
                 rotar.addActionListener(menu);
                 transformaciongeo.add(rotar);
+                JMenuItem libre = new JMenuItem("Libre");
+                libre.addActionListener(menu);
+                transformaciongeo.add(libre);
                 
                 
                 setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -375,6 +378,25 @@ public class Main extends JFrame{
                 double angulo = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca el angulo de rotacion","Rotación",JOptionPane.QUESTION_MESSAGE));
                 try{
                    bfImage=metodos.Rotar(angulo); 
+                }catch (IOException exep){
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Libre")){
+                double pos00 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca el angulo de rotacion","Rotación",JOptionPane.QUESTION_MESSAGE));
+                double pos01 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca el angulo de rotacion","Rotación",JOptionPane.QUESTION_MESSAGE));
+                double pos02 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca el angulo de rotacion","Rotación",JOptionPane.QUESTION_MESSAGE));
+                double pos10 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca el angulo de rotacion","Rotación",JOptionPane.QUESTION_MESSAGE));
+                double pos11 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca el angulo de rotacion","Rotación",JOptionPane.QUESTION_MESSAGE));
+                double pos12 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca el angulo de rotacion","Rotación",JOptionPane.QUESTION_MESSAGE));
+                double pos20 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca el angulo de rotacion","Rotación",JOptionPane.QUESTION_MESSAGE));
+                double pos21 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca el angulo de rotacion","Rotación",JOptionPane.QUESTION_MESSAGE));
+                double pos22 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca el angulo de rotacion","Rotación",JOptionPane.QUESTION_MESSAGE));
+                try{
+                   bfImage=metodos.Libre(pos00,pos01,pos02,pos10,pos11,pos12,pos20,pos21,pos22); 
                 }catch (IOException exep){
                     exep.printStackTrace();
                 }
