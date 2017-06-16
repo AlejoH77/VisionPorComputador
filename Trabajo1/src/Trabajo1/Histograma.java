@@ -1,3 +1,4 @@
+//oeeeeeeee
 package Trabajo1;
 
 import java.awt.image.BufferedImage;
