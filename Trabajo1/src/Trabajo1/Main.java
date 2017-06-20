@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
@@ -27,15 +29,22 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class Main extends JFrame{
     
     File f = null;
+    File fileO = null;
+    File fileM = null;
     JLabel modificado;
     JLabel original;
     BufferedImage bfImage = null;
+    BufferedImage BfImagenF = null;
+    BufferedImage BfImagenO = null;
+    static public int CondicionalImg = 0;
     public int media=-1;
     public int mediana=-1;
     public int moda=-1;
     public int varianza=-1;
     JMenu estadistica = new JMenu("Estadistica");
     JMenu transformaciongeo = new JMenu("Transformaciones Geometricas");
+    JMenu segmentacion = new JMenu("Segmentación");
+    JMenu img = new JMenu("Imagen");
     JScrollPane imgFinal = new JScrollPane();
     JScrollPane imgOriginal = new JScrollPane();
     JLabel Media=new JLabel("Média: ");
@@ -117,6 +126,49 @@ public class Main extends JFrame{
                 JMenuItem libre = new JMenuItem("Libre");
                 libre.addActionListener(menu);
                 transformaciongeo.add(libre);
+                barraMenu.add(segmentacion);
+                segmentacion.setEnabled(false);
+                JMenuItem brillo = new JMenuItem("Brillo");
+                brillo.addActionListener(menu);
+                segmentacion.add(brillo);
+                JMenuItem contraste = new JMenuItem("Contraste");
+                contraste.addActionListener(menu);
+                segmentacion.add(contraste);
+                JMenu transftongris = new JMenu("Transformar en tonalidades de gris");
+                JMenuItem promsimple = new JMenuItem("Promedio Simple");
+                promsimple.addActionListener(menu);
+                transftongris.add(promsimple);
+                JMenuItem promponderado1 = new JMenuItem("Promedio Ponderado 1");
+                promponderado1.addActionListener(menu);
+                transftongris.add(promponderado1);
+                JMenuItem promponderado2 = new JMenuItem("Promedio Ponderado 2");
+                promponderado2.addActionListener(menu);
+                transftongris.add(promponderado2);
+                segmentacion.add(transftongris);
+                JMenu fsuavizado = new JMenu("Filtros de Suavizado");
+                JMenuItem fpromedio = new JMenuItem("Filtro Promedio");
+                fpromedio.addActionListener(menu);
+                fsuavizado.add(fpromedio);
+                JMenuItem fmediana = new JMenuItem("Filtro Mediana");
+                fmediana.addActionListener(menu);
+                fsuavizado.add(fmediana);
+                JMenuItem fmoda = new JMenuItem("Filtro Moda");
+                fmoda.addActionListener(menu);
+                fsuavizado.add(fmoda);
+                JMenuItem fgauss = new JMenuItem("Filtro Gauss");
+                fgauss.addActionListener(menu);
+                fsuavizado.add(fgauss);
+                segmentacion.add(fsuavizado);
+                JMenuItem limitarizacion = new JMenuItem("Limitarización");
+                limitarizacion.addActionListener(menu);
+                segmentacion.add(limitarizacion);
+                JMenuItem original = new JMenuItem("Original");
+                original.addActionListener(menu);
+                img.add(original);
+                JMenuItem ifinal = new JMenuItem("Final");
+                ifinal.addActionListener(menu);
+                img.add(ifinal);
+                barraMenu.add(img);
                 
                 
                 setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -152,9 +204,23 @@ public class Main extends JFrame{
     
     class OyenteMenu implements ActionListener {
         public void actionPerformed(ActionEvent e){
-            Metodos metodos = new Metodos(f);
+            if(CondicionalImg==0){
+                bfImage=BfImagenO;
+            }
+            else{
+                bfImage=BfImagenF;
+            }
+            Metodos metodos = new Metodos(bfImage);
             String comandoAccionm = (String)e.getActionCommand();
             if(e.getSource() instanceof JMenuItem)
+            if(comandoAccionm.equals("Original")){
+                CondicionalImg=0;
+                System.out.println(CondicionalImg);
+            }
+            if(comandoAccionm.equals("Final")){
+                CondicionalImg=1;
+                System.out.println(CondicionalImg);
+            }
             if(comandoAccionm.equals("Histograma")){
                 if(f!=null){
                    try {
@@ -173,9 +239,7 @@ public class Main extends JFrame{
                         Media.setText("Média: "+media);
                 } catch (IOException exep) {	
                         exep.printStackTrace();
-                }
-                //dispose(); cierra la ventana
-                //Main.Ventana= new VentanaPrincipal();			
+                }		
             }
             if(comandoAccionm.equals("Mediana")){
                 try {
@@ -212,17 +276,21 @@ public class Main extends JFrame{
                 JFileChooser jf = new JFileChooser();//clase del explorador
                 File diretorio = new File("C://");
                 jf.setCurrentDirectory(diretorio);
-                FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG", "jpg");
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG", "jpg", "PNG", "png");
                 jf.setFileFilter(filter);
                 if(jf.showOpenDialog(getParent())== JFileChooser.APPROVE_OPTION) {  //Verifica si el usuario dio "ok"
                     File file= jf.getSelectedFile();
                     modificado= new JLabel(new ImageIcon(file.toString()));
                     original=modificado;
                     f=file;
+                    try {
+                        BfImagenO = ImageIO.read(file);
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(null, "No se puede abrir la imagen");
+                    }
                     imgOriginal.setViewportView(modificado);		        		
                     imgFinal.setViewportView(null);
                     validate();
-                    //Salvar.setEnabled(true);
                     media=-1;
                     mediana=-1;
                     moda=-1;
@@ -233,6 +301,7 @@ public class Main extends JFrame{
                     Varianza.setText("Varianza: ");
                     transformaciongeo.setEnabled(true);
                     estadistica.setEnabled(true);
+                    segmentacion.setEnabled(true);
                     try {
                         bfImage=ImageIO.read(file);
                     } catch (IOException e1) {
@@ -247,6 +316,7 @@ public class Main extends JFrame{
                 if(media!=-1){
                     try {
                         bfImage=metodos.recibeMedia(media);
+                        BfImagenF=bfImage;
                     } catch (IOException exep) {
                         exep.printStackTrace();
                     }
@@ -263,6 +333,7 @@ public class Main extends JFrame{
                 if(mediana>0){
                     try {
                         bfImage=metodos.recibeMediana(mediana);
+                        BfImagenF=bfImage;
                     } catch (IOException exep) {
                         exep.printStackTrace();
                     }
@@ -277,6 +348,7 @@ public class Main extends JFrame{
                 if(moda>0){
                     try{
                         bfImage=metodos.recibeModa(moda);
+                        BfImagenF=bfImage;
                     }catch (IOException exep){
                         exep.printStackTrace();
                     }
@@ -292,6 +364,7 @@ public class Main extends JFrame{
                 if(media!=-1){
                     try {
                         bfImage=metodos.recibeMediaBlanco(media);
+                        BfImagenF=bfImage;
                     } catch (IOException exep) {
                         exep.printStackTrace();
                     }
@@ -307,7 +380,8 @@ public class Main extends JFrame{
             if(comandoAccionm.equals("< mediana negro, > media blanco")){
                 if(mediana>0){
                     try{
-                       bfImage=metodos.recibeMedianayMedia(mediana,media); 
+                       bfImage=metodos.recibeMedianayMedia(mediana,media);
+                       BfImagenF=bfImage;
                     }catch (IOException exep){
                         exep.printStackTrace();
                     }
@@ -321,7 +395,8 @@ public class Main extends JFrame{
             }
             if(comandoAccionm.equals("Reflejo eje x")){
                     try{
-                       bfImage=metodos.Reflejoejex(); 
+                       bfImage=metodos.Reflejoejex();
+                       BfImagenF=bfImage;
                     }catch (IOException exep){
                         exep.printStackTrace();
                     }
@@ -331,7 +406,8 @@ public class Main extends JFrame{
             }
             if(comandoAccionm.equals("Reflejo eje y")){
                 try{
-                   bfImage=metodos.Reflejoejey(); 
+                   bfImage=metodos.Reflejoejey();
+                   BfImagenF=bfImage;
                 }catch (IOException exep){
                     exep.printStackTrace();
                 }
@@ -343,7 +419,8 @@ public class Main extends JFrame{
                 int ejex = Integer.parseInt(JOptionPane.showInputDialog(null,"Introduzca traslación","Mover en eje x",JOptionPane.QUESTION_MESSAGE));
                 int ejey = Integer.parseInt(JOptionPane.showInputDialog(null,"Introduzca traslación","Mover en eje y",JOptionPane.QUESTION_MESSAGE));
                 try{
-                   bfImage=metodos.Traslacion(ejex, ejey); 
+                   bfImage=metodos.Traslacion(ejex, ejey);
+                   BfImagenF=bfImage;
                 }catch (IOException exep){
                     exep.printStackTrace();
                 }
@@ -354,7 +431,8 @@ public class Main extends JFrame{
             if(comandoAccionm.equals("Ampliar")){
                 int ampliacion = Integer.parseInt(JOptionPane.showInputDialog(null,"Introduzca Escala de ampliación","Ampliación",JOptionPane.QUESTION_MESSAGE));
                 try{
-                   bfImage=metodos.Ampliar(ampliacion); 
+                   bfImage=metodos.Ampliar(ampliacion);
+                   BfImagenF=bfImage;
                 }catch (IOException exep){
                     exep.printStackTrace();
                 }
@@ -396,6 +474,16 @@ public class Main extends JFrame{
                 double pos22 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca posicion [2][2] de la matriz","Transformación Libre",JOptionPane.QUESTION_MESSAGE));
                 try{
                    bfImage=metodos.Libre(pos00,pos01,pos02,pos10,pos11,pos12,pos20,pos21,pos22); 
+                }catch (IOException exep){
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Promedio Simple")){
+                try{
+                   bfImage=metodos.PromedioSimple(); 
                 }catch (IOException exep){
                     exep.printStackTrace();
                 }

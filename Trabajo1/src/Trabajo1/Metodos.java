@@ -35,7 +35,7 @@ import org.jfree.data.statistics.HistogramDataset;
 
 
 public class Metodos {
-    public File file = null;
+    public BufferedImage Imagen = null;
     public int[][] Matriz = null;
     public int[][] MatrizTransformacion = new int[3][3];
     public double[][] MatrizTransformacionD = new double[3][3];
@@ -44,8 +44,8 @@ public class Metodos {
     public int[][] yKernel = null;
     public int a = 0;
     
-    public Metodos(File f){//constructor
-        file=f;     
+    public Metodos(BufferedImage imagen){//constructor
+        Imagen=imagen;     
     }
     
     public void MatrizIdentidad(int[][] matriz){
@@ -105,7 +105,7 @@ public class Metodos {
     }
     
     public BufferedImage ImgTonoGris() throws IOException {		
-        BufferedImage imagen = ImageIO.read(file);
+        BufferedImage imagen = Imagen;
         int ancho = imagen.getWidth();
         int alto = imagen.getHeight();
         Matriz=new int[ancho][alto];
@@ -122,7 +122,7 @@ public class Metodos {
     }
     
     public int CalcularMedia() throws IOException{	
-        BufferedImage bfImagen = ImageIO.read(file);
+        BufferedImage bfImagen = Imagen;
         int media=0;
         int h=0;
         for(int i=0; i<bfImagen.getWidth();i++){
@@ -139,7 +139,7 @@ public class Metodos {
     }
     
     public int CalcularMediana()throws IOException{	
-            BufferedImage imagen = ImageIO.read(file);
+            BufferedImage imagen = Imagen;
             int[][] Matriz = new int[imagen.getWidth()][imagen.getHeight()];
             int[] VectorGrises = new int[(imagen.getWidth()*imagen.getHeight())];
             int h=0;
@@ -161,7 +161,7 @@ public class Metodos {
     
     public int CalcularModa()throws IOException{
             int[] vector = new int[256];
-            BufferedImage imagen = ImageIO.read(file);
+            BufferedImage imagen = Imagen;
             int w = imagen.getWidth();
             int h = imagen.getHeight();
             Matriz=new int[w][h];
@@ -191,7 +191,7 @@ public class Metodos {
         int mediaPixel=0;
         int totalMatriz=0;
         int varianza=0;
-        BufferedImage imagen = ImageIO.read(file);
+        BufferedImage imagen = Imagen;
         int ancho = imagen.getWidth();
         int alto = imagen.getHeight();
         Matriz=new int[ancho][alto];
@@ -213,7 +213,7 @@ public class Metodos {
     }
     
     public BufferedImage recibeMedia(int media) throws IOException {	
-        BufferedImage imagem = ImageIO.read(file);
+        BufferedImage imagem = Imagen;
         int ancho = imagem.getWidth();
         int alto = imagem.getHeight();
         Matriz = new int[ancho][alto];
@@ -234,7 +234,7 @@ public class Metodos {
     }
     
     public BufferedImage recibeMediana(int mediana) throws IOException{
-        BufferedImage imagen = ImageIO.read(file);
+        BufferedImage imagen = Imagen;
         int w = imagen.getWidth();
         int h = imagen.getHeight();
         Matriz=new int[w][h];
@@ -255,7 +255,7 @@ public class Metodos {
     }
     
     public BufferedImage recibeModa(int moda) throws IOException{
-        BufferedImage imagen = ImageIO.read(file);
+        BufferedImage imagen = Imagen;
         int ancho = imagen.getWidth();
         int alto = imagen.getHeight();
         Matriz=new int[ancho][alto];
@@ -276,7 +276,7 @@ public class Metodos {
     }
     
     public BufferedImage recibeMediaBlanco(int media) throws IOException {	
-        BufferedImage imagem = ImageIO.read(file);
+        BufferedImage imagem = Imagen;
         int ancho = imagem.getWidth();
         int alto = imagem.getHeight();
         Matriz = new int[ancho][alto];
@@ -297,7 +297,7 @@ public class Metodos {
     }
     
     public BufferedImage recibeMedianayMedia(int mediana, int media) throws IOException{
-        BufferedImage imagen = ImageIO.read(file);
+        BufferedImage imagen = Imagen;
         int alto = imagen.getHeight();
         int ancho = imagen.getWidth();
         Matriz = new int [ancho][alto];
@@ -324,14 +324,14 @@ public class Metodos {
     public BufferedImage Reflejoejex() throws IOException{
         MatrizIdentidad(MatrizTransformacion);
         MatrizTransformacion[0][0]=-1;
-        BufferedImage imagenO = ImageIO.read(file);
-        BufferedImage imagenF = ImageIO.read(file);
+        BufferedImage imagenO = Imagen;
+        BufferedImage imagenF = new BufferedImage(Imagen.getWidth(),Imagen.getHeight(),imagenO.getType());
         int alto = imagenO.getHeight();
         int ancho = imagenO.getWidth();
         for(int i=0;i<ancho;i++){
             for(int j=0;j<alto;j++){
                 Color c = new Color(imagenO.getRGB(i, j));
-                int ni = MultPColumna(MatrizTransformacion,i,j,1) + (ancho-1);
+                int ni = MultPColumna(MatrizTransformacion,i,j,1) + (alto-1);
                 imagenF.setRGB(ni, j, c.getRGB());
             }
         }
@@ -341,8 +341,8 @@ public class Metodos {
     public BufferedImage Reflejoejey() throws IOException{
         MatrizIdentidad(MatrizTransformacion);
         MatrizTransformacion[1][1]=-1;
-        BufferedImage imagenO = ImageIO.read(file);
-        BufferedImage imagenF = ImageIO.read(file);
+        BufferedImage imagenO = Imagen;
+        BufferedImage imagenF = new BufferedImage(Imagen.getWidth(),Imagen.getHeight(),imagenO.getType());
         int alto = imagenO.getHeight();
         int ancho = imagenO.getWidth();
         for(int i=0;i<ancho;i++){
@@ -357,7 +357,7 @@ public class Metodos {
     
     public BufferedImage Traslacion(int x, int y) throws IOException{
         MatrizIdentidad(MatrizTransformacion);
-        BufferedImage imagenO = ImageIO.read(file);
+        BufferedImage imagenO = Imagen;
         int alto = imagenO.getHeight();
         int ancho = imagenO.getWidth();
         BufferedImage imagenF = new BufferedImage(ancho, alto, imagenO.getType());
@@ -378,7 +378,8 @@ public class Metodos {
         MatrizIdentidad(MatrizTransformacion);
         MatrizTransformacion[0][0]=ampliacion;
         MatrizTransformacion[1][1]=ampliacion;
-        BufferedImage imagenO = ImageIO.read(file);     
+        //BufferedImage imagenO = ImageIO.read(file);
+        BufferedImage imagenO = Imagen;
         int alto = imagenO.getHeight();
         int ancho = imagenO.getWidth();
         BufferedImage imagenF = new BufferedImage(ancho*ampliacion, alto*ampliacion, imagenO.getType());
@@ -394,7 +395,7 @@ public class Metodos {
     }
     
     public BufferedImage Reducir(double reduccion) throws IOException{
-        BufferedImage imagenO = ImageIO.read(file);
+        BufferedImage imagenO = Imagen;
         int alto = imagenO.getHeight();
         int ancho = imagenO.getWidth();
         int nalto =alto/(int)reduccion;
@@ -419,7 +420,7 @@ public class Metodos {
     
     public BufferedImage Rotar(double angulo) throws IOException{
         MatrizIdentidadD(MatrizTransformacionD);
-        BufferedImage imagenO = ImageIO.read(file);
+        BufferedImage imagenO = Imagen;
         int alto = imagenO.getHeight();
         int ancho = imagenO.getWidth();
         BufferedImage imagenF = new BufferedImage(ancho, alto, imagenO.getType());
@@ -454,7 +455,7 @@ public class Metodos {
     }
     
     public BufferedImage Libre(double pos00,double pos01,double pos02,double pos10,double pos11,double pos12,double pos20,double pos21,double pos22) throws IOException{
-        BufferedImage imagenO = ImageIO.read(file);
+        BufferedImage imagenO = Imagen;
         int alto = imagenO.getHeight();
         int ancho = imagenO.getWidth();
         BufferedImage imagenF = new BufferedImage(ancho, alto, imagenO.getType());
@@ -481,7 +482,7 @@ public class Metodos {
     }
      
     public void mostraHistograma() throws IOException{
-        BufferedImage imagen = ImageIO.read(file);
+        BufferedImage imagen = Imagen;
         int ancho = imagen.getWidth();
         int alto = imagen.getHeight();
         Matriz=new int[ancho][alto];
@@ -497,4 +498,23 @@ public class Metodos {
         Histograma hist = new Histograma();
         hist.GenerarHistograma(imagen,Matriz);
     }
+    
+    public BufferedImage PromedioSimple() throws IOException {		
+        BufferedImage imagen = Imagen;
+        int ancho = imagen.getWidth();
+        int alto = imagen.getHeight();
+        Matriz=new int[ancho][alto];
+        for(int i=0; i<ancho;i++){
+                for(int j=0; j<alto; j++){
+                        Color c = new Color(imagen.getRGB(i, j));
+                        int TonoGris =(c.getRed()+c.getGreen()+c.getBlue())/3;
+                        c = new Color(TonoGris,TonoGris,TonoGris);
+                        imagen.setRGB(i, j, c.getRGB());
+                        Matriz[i][j]= TonoGris;
+                }
+        }
+        return imagen;   
+    }
 }
+
+
