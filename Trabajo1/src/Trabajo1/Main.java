@@ -1,6 +1,5 @@
 package Trabajo1;
 
-import Trabajo1.Metodos;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -386,15 +385,15 @@ public class Main extends JFrame{
                 imgFinal.setViewportView(modificado);
             }
             if(comandoAccionm.equals("Libre")){
-                double pos00 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca el angulo de rotacion","Rotación",JOptionPane.QUESTION_MESSAGE));
-                double pos01 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca el angulo de rotacion","Rotación",JOptionPane.QUESTION_MESSAGE));
-                double pos02 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca el angulo de rotacion","Rotación",JOptionPane.QUESTION_MESSAGE));
-                double pos10 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca el angulo de rotacion","Rotación",JOptionPane.QUESTION_MESSAGE));
-                double pos11 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca el angulo de rotacion","Rotación",JOptionPane.QUESTION_MESSAGE));
-                double pos12 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca el angulo de rotacion","Rotación",JOptionPane.QUESTION_MESSAGE));
-                double pos20 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca el angulo de rotacion","Rotación",JOptionPane.QUESTION_MESSAGE));
-                double pos21 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca el angulo de rotacion","Rotación",JOptionPane.QUESTION_MESSAGE));
-                double pos22 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca el angulo de rotacion","Rotación",JOptionPane.QUESTION_MESSAGE));
+                double pos00 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca posicion [0][0] de la matriz","Transformación Libre",JOptionPane.QUESTION_MESSAGE));
+                double pos01 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca posicion [0][1] de la matriz","Transformación Libre",JOptionPane.QUESTION_MESSAGE));
+                double pos02 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca posicion [0][2] de la matriz","Transformación Libre",JOptionPane.QUESTION_MESSAGE));
+                double pos10 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca posicion [1][0] de la matriz","Transformación Libre",JOptionPane.QUESTION_MESSAGE));
+                double pos11 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca posicion [1][1] de la matriz","Transformación Libre",JOptionPane.QUESTION_MESSAGE));
+                double pos12 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca posicion [1][2] de la matriz","Transformación Libre",JOptionPane.QUESTION_MESSAGE));
+                double pos20 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca posicion [2][0] de la matriz","Transformación Libre",JOptionPane.QUESTION_MESSAGE));
+                double pos21 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca posicion [2][1] de la matriz","Transformación Libre",JOptionPane.QUESTION_MESSAGE));
+                double pos22 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca posicion [2][2] de la matriz","Transformación Libre",JOptionPane.QUESTION_MESSAGE));
                 try{
                    bfImage=metodos.Libre(pos00,pos01,pos02,pos10,pos11,pos12,pos20,pos21,pos22); 
                 }catch (IOException exep){
