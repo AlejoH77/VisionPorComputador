@@ -480,7 +480,92 @@ public class Metodos {
         }
         return imagenF;
     }
-     
+    
+    public BufferedImage PromedioSimple() throws IOException {		
+        BufferedImage imagenO = Imagen;
+        int ancho = imagenO.getWidth();
+        int alto = imagenO.getHeight();
+        BufferedImage imagenF = new BufferedImage(ancho, alto, imagenO.getType());
+        for(int i=0; i<ancho;i++){
+                for(int j=0; j<alto; j++){
+                        Color c = new Color(imagenO.getRGB(i, j));
+                        int TonoGris =(c.getRed()+c.getGreen()+c.getBlue())/3;
+                        c = new Color(TonoGris,TonoGris,TonoGris);
+                        imagenF.setRGB(i, j, c.getRGB());
+                }
+        }
+        return imagenF;   
+    }
+    
+    public BufferedImage PromedioP1() throws IOException {		
+        BufferedImage imagenO = Imagen;
+        int ancho = imagenO.getWidth();
+        int alto = imagenO.getHeight();
+        BufferedImage imagenF = new BufferedImage(ancho, alto, imagenO.getType());
+        for(int i=0; i<ancho;i++){
+                for(int j=0; j<alto; j++){
+                        Color c = new Color(imagenO.getRGB(i, j));
+                        int TonoGris = (int) (c.getRed()*0.2125 + c.getGreen()*0.7154 + 0.0721*c.getBlue());
+                        TonoGris = (TonoGris >= 255) ? 255 : TonoGris;
+                        c = new Color(TonoGris,TonoGris,TonoGris);
+                        imagenF.setRGB(i, j, c.getRGB());
+                }
+        }
+        return imagenF;   
+    }
+    
+    public BufferedImage PromedioP2() throws IOException {		
+        BufferedImage imagenO = Imagen;
+        int ancho = imagenO.getWidth();
+        int alto = imagenO.getHeight();
+        BufferedImage imagenF = new BufferedImage(ancho, alto, imagenO.getType());
+        for(int i=0; i<ancho;i++){
+                for(int j=0; j<alto; j++){
+                        Color c = new Color(imagenO.getRGB(i, j));
+                        int TonoGris = (int) (c.getRed()*0.5 + c.getGreen()*0.419 + 0.081*c.getBlue());
+                        TonoGris = (TonoGris >= 255) ? 255 : TonoGris;
+                        c = new Color(TonoGris,TonoGris,TonoGris);
+                        imagenF.setRGB(i, j, c.getRGB());
+                }
+        }
+        return imagenF;   
+    }
+    public BufferedImage Brillo(int brillo) throws IOException {		
+        BufferedImage imagenO = Imagen;
+        int ancho = imagenO.getWidth();
+        int alto = imagenO.getHeight();
+        BufferedImage imagenF = new BufferedImage(ancho, alto, imagenO.getType());
+        for(int i=0; i<ancho;i++){
+                for(int j=0; j<alto; j++){
+                        Color c = new Color(imagenO.getRGB(i, j));
+                        int rojo = c.getRed()+brillo;
+                        if(rojo > 255){
+                            rojo=255;
+                        }
+                        else if (rojo < 0){
+                            rojo=0;
+                        }
+                        c = new Color((int) (c.getRed()+brillo),(int)(c.getGreen()+brillo),(int)(c.getBlue()+brillo));
+                        c = new Color (rojo,verde,azul);
+                        imagenO.setRGB(i, j, c.getRGB());
+                }
+        }
+        return imagenF;   
+    }
+    public BufferedImage Contraste(int contraste) throws IOException {		
+        BufferedImage imagen = Imagen;
+        int ancho = imagen.getWidth();
+        int alto = imagen.getHeight();
+        for(int i=0; i<ancho;i++){
+                for(int j=0; j<alto; j++){
+                        Color c = new Color(imagen.getRGB(i, j));
+                        c = new Color((int) (c.getRed()*0.5),(int)(c.getGreen()*0.419),(int)(c.getBlue()*0.081));
+                        imagen.setRGB(i, j, c.getRGB());
+                }
+        }
+        return imagen;   
+    }
+    
     public void mostraHistograma() throws IOException{
         BufferedImage imagen = Imagen;
         int ancho = imagen.getWidth();
@@ -499,22 +584,6 @@ public class Metodos {
         hist.GenerarHistograma(imagen,Matriz);
     }
     
-    public BufferedImage PromedioSimple() throws IOException {		
-        BufferedImage imagen = Imagen;
-        int ancho = imagen.getWidth();
-        int alto = imagen.getHeight();
-        Matriz=new int[ancho][alto];
-        for(int i=0; i<ancho;i++){
-                for(int j=0; j<alto; j++){
-                        Color c = new Color(imagen.getRGB(i, j));
-                        int TonoGris =(c.getRed()+c.getGreen()+c.getBlue())/3;
-                        c = new Color(TonoGris,TonoGris,TonoGris);
-                        imagen.setRGB(i, j, c.getRGB());
-                        Matriz[i][j]= TonoGris;
-                }
-        }
-        return imagen;   
-    }
 }
 
 
