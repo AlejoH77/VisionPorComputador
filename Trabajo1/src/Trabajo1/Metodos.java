@@ -539,6 +539,8 @@ public class Metodos {
                 for(int j=0; j<alto; j++){
                         Color c = new Color(imagenO.getRGB(i, j));
                         int rojo = c.getRed()+brillo;
+                        int verde = c.getGreen()+brillo;
+                        int azul = c.getBlue()+brillo;
                         if(rojo > 255){
                             rojo=255;
                         }
@@ -547,7 +549,7 @@ public class Metodos {
                         }
                         c = new Color((int) (c.getRed()+brillo),(int)(c.getGreen()+brillo),(int)(c.getBlue()+brillo));
                         c = new Color (rojo,verde,azul);
-                        imagenO.setRGB(i, j, c.getRGB());
+                        imagenF.setRGB(i, j, c.getRGB());
                 }
         }
         return imagenF;   
