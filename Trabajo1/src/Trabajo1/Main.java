@@ -195,7 +195,7 @@ public class Main extends JFrame{
                 //botones
                 tco.setBounds(100,35,300,25);
                 tco.setVisible(true);
-                tco.setSelected(false);
+                tco.setSelected(true);
                 tco.setEnabled(false);
                 tcm.setBounds(700,35,300,25);
                 tcm.setVisible(true);
@@ -538,6 +538,74 @@ public class Main extends JFrame{
                 int brillo = Integer.parseInt(JOptionPane.showInputDialog(null,"Introduzca el brillo","Brillo",JOptionPane.QUESTION_MESSAGE));
                 try{
                    bfImage=metodos.Brillo(brillo);
+                   BfImagenF=bfImage;
+                }catch (IOException exep){
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Contraste")){
+                int contraste = Integer.parseInt(JOptionPane.showInputDialog(null,"Introduzca el brillo","Brillo",JOptionPane.QUESTION_MESSAGE));
+                try{
+                   bfImage=metodos.Contraste(contraste);
+                   BfImagenF=bfImage;
+                }catch (IOException exep){
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Filtro Promedio")){
+                try{
+                   bfImage=metodos.FiltroPromedio();
+                   BfImagenF=bfImage;
+                }catch (IOException exep){
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Filtro Mediana")){
+                try{
+                   bfImage=metodos.FiltroPromedio();
+                   BfImagenF=bfImage;
+                }catch (IOException exep){
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Filtro Moda")){
+                try{
+                   bfImage=metodos.FiltroPromedio();
+                   BfImagenF=bfImage;
+                }catch (IOException exep){
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Filtro Gauss")){
+                try{
+                   bfImage=metodos.FiltroGauss();
+                   BfImagenF=bfImage;
+                }catch (IOException exep){
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Limitarización")){
+                int umbral = Integer.parseInt(JOptionPane.showInputDialog(null,"Introduzca el umbral","Umbral",JOptionPane.QUESTION_MESSAGE));
+                try{
+                   bfImage=metodos.Limitarizacion(umbral);
                    BfImagenF=bfImage;
                 }catch (IOException exep){
                     exep.printStackTrace();
