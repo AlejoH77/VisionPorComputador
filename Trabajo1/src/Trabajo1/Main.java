@@ -1,5 +1,6 @@
 package Trabajo1;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -300,6 +301,7 @@ public class Main extends JFrame{
                     f=file;
                     try {
                         BfImagenO = ImageIO.read(file);
+                        BfImagenF = ImageIO.read(file);
                     } catch (IOException ex) {
                         JOptionPane.showMessageDialog(null, "No se puede abrir la imagen");
                     }
