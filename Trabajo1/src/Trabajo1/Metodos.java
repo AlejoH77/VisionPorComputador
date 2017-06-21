@@ -331,7 +331,7 @@ public class Metodos {
         for(int i=0;i<ancho;i++){
             for(int j=0;j<alto;j++){
                 Color c = new Color(imagenO.getRGB(i, j));
-                int ni = MultPColumna(MatrizTransformacion,i,j,1) + (alto-1);
+                int ni = MultPColumna(MatrizTransformacion,i,j,1) + (ancho-1);
                 imagenF.setRGB(ni, j, c.getRGB());
             }
         }
