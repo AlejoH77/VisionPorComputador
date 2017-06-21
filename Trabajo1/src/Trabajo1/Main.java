@@ -45,6 +45,9 @@ public class Main extends JFrame{
     JMenu transformaciongeo = new JMenu("Transformaciones Geometricas");
     JMenu segmentacion = new JMenu("Segmentación");
     JMenu img = new JMenu("Imagen");
+    ButtonGroup bg = new ButtonGroup();
+    JRadioButton tco = new JRadioButton("Trabajar con Imagen Original");//trabajar con orginial
+    JRadioButton tcm = new JRadioButton("Trabajar con Imagen Modificada");//trabajar con modificada
     JScrollPane imgFinal = new JScrollPane();
     JScrollPane imgOriginal = new JScrollPane();
     JLabel Media=new JLabel("Média: ");
@@ -170,9 +173,15 @@ public class Main extends JFrame{
                 img.add(ifinal);
                 barraMenu.add(img);
                 
+                //grupo de botones
+                tco.addActionListener(menu);
+                tcm.addActionListener(menu);
+                bg.add(tco);
+                bg.add(tcm);
+                
                 
                 setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setBounds(0, 0, 1200, 720);
+		setBounds(0, 0, 1150, 720);
 		setVisible(true);
 		setResizable(false);
 		setLayout(null);
@@ -191,9 +200,21 @@ public class Main extends JFrame{
                 getContentPane().add(Varianza);
                 getContentPane().add(Moda);
                 
+                //botones
+                tco.setBounds(100,35,300,25);
+                tco.setVisible(true);
+                tco.setSelected(false);
+                tco.setEnabled(false);
+                tcm.setBounds(700,35,300,25);
+                tcm.setVisible(true);
+                tco.setSelected(false);               
+                tcm.setEnabled(false);
+                getContentPane().add(tco);
+                getContentPane().add(tcm);
+                
                 //imagenes
-                imgOriginal.setBounds(10, 35, 550, 600);
-                imgFinal.setBounds(570, 35, 550, 600);
+                imgOriginal.setBounds(10, 65, 550, 600);
+                imgFinal.setBounds(570, 65, 550, 600);
                 getContentPane().add(imgOriginal);
                 getContentPane().add(imgFinal);
     }
@@ -204,11 +225,13 @@ public class Main extends JFrame{
     
     class OyenteMenu implements ActionListener {
         public void actionPerformed(ActionEvent e){
-            if(CondicionalImg==0){
+            if(e.getSource()==tco || CondicionalImg==0){
                 bfImage=BfImagenO;
+                CondicionalImg=0;
             }
-            else{
+            if(e.getSource()==tcm || CondicionalImg==1){
                 bfImage=BfImagenF;
+                CondicionalImg=1;
             }
             Metodos metodos = new Metodos(bfImage);
             String comandoAccionm = (String)e.getActionCommand();
@@ -302,6 +325,8 @@ public class Main extends JFrame{
                     transformaciongeo.setEnabled(true);
                     estadistica.setEnabled(true);
                     segmentacion.setEnabled(true);
+                    tco.setEnabled(true);
+                    tcm.setEnabled(true);
                     try {
                         bfImage=ImageIO.read(file);
                     } catch (IOException e1) {
@@ -443,7 +468,8 @@ public class Main extends JFrame{
             if(comandoAccionm.equals("Reducir")){
                 double reduccion = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca Escala de reducción","Reducción",JOptionPane.QUESTION_MESSAGE));
                 try{
-                   bfImage=metodos.Reducir(reduccion); 
+                   bfImage=metodos.Reducir(reduccion);
+                   BfImagenF=bfImage;
                 }catch (IOException exep){
                     exep.printStackTrace();
                 }
@@ -454,7 +480,8 @@ public class Main extends JFrame{
             if(comandoAccionm.equals("Rotar")){
                 double angulo = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca el angulo de rotacion","Rotación",JOptionPane.QUESTION_MESSAGE));
                 try{
-                   bfImage=metodos.Rotar(angulo); 
+                   bfImage=metodos.Rotar(angulo);
+                   BfImagenF=bfImage;
                 }catch (IOException exep){
                     exep.printStackTrace();
                 }
@@ -473,7 +500,8 @@ public class Main extends JFrame{
                 double pos21 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca posicion [2][1] de la matriz","Transformación Libre",JOptionPane.QUESTION_MESSAGE));
                 double pos22 = Double.parseDouble(JOptionPane.showInputDialog(null,"Introduzca posicion [2][2] de la matriz","Transformación Libre",JOptionPane.QUESTION_MESSAGE));
                 try{
-                   bfImage=metodos.Libre(pos00,pos01,pos02,pos10,pos11,pos12,pos20,pos21,pos22); 
+                   bfImage=metodos.Libre(pos00,pos01,pos02,pos10,pos11,pos12,pos20,pos21,pos22);
+                   BfImagenF=bfImage;
                 }catch (IOException exep){
                     exep.printStackTrace();
                 }
@@ -483,7 +511,30 @@ public class Main extends JFrame{
             }
             if(comandoAccionm.equals("Promedio Simple")){
                 try{
-                   bfImage=metodos.PromedioSimple(); 
+                   bfImage=metodos.PromedioSimple();
+                   BfImagenF=bfImage;
+                }catch (IOException exep){
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Promedio Ponderado 1")){
+                try{
+                   bfImage=metodos.PromedioP1();
+                   BfImagenF=bfImage;
+                }catch (IOException exep){
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Promedio Ponderado 2")){
+                try{
+                   bfImage=metodos.PromedioP2();
+                   BfImagenF=bfImage;
                 }catch (IOException exep){
                     exep.printStackTrace();
                 }

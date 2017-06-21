@@ -104,23 +104,6 @@ public class Metodos {
         return total;
     }
     
-    public BufferedImage ImgTonoGris() throws IOException {		
-        BufferedImage imagen = Imagen;
-        int ancho = imagen.getWidth();
-        int alto = imagen.getHeight();
-        Matriz=new int[ancho][alto];
-        for(int i=0; i<ancho;i++){
-                for(int j=0; j<alto; j++){
-                        Color c = new Color(imagen.getRGB(i, j));
-                        int TonoGris =(c.getRed()+c.getGreen()+c.getBlue())/3;
-                        c = new Color(TonoGris,TonoGris,TonoGris);
-                        imagen.setRGB(i, j, c.getRGB());
-                        Matriz[i][j]= TonoGris;
-                }
-        }
-        return imagen;   
-    }
-    
     public int CalcularMedia() throws IOException{	
         BufferedImage bfImagen = Imagen;
         int media=0;
@@ -200,7 +183,6 @@ public class Metodos {
                 Color c = new Color(imagen.getRGB(i, j));
                 int TonoGris = (c.getRed()+c.getGreen()+c.getBlue())/3;
                 c = new Color(TonoGris,TonoGris,TonoGris);
-                imagen.setRGB(i, j, c.getRGB()); 
                 Matriz[i][j]=TonoGris;
                 //calcula la sumatoria
                 resta=Matriz[i][j]-media;
@@ -213,97 +195,97 @@ public class Metodos {
     }
     
     public BufferedImage recibeMedia(int media) throws IOException {	
-        BufferedImage imagem = Imagen;
-        int ancho = imagem.getWidth();
-        int alto = imagem.getHeight();
+        BufferedImage imagenO = Imagen;
+        int ancho = imagenO.getWidth();
+        int alto = imagenO.getHeight();
+        BufferedImage imagenF = new BufferedImage(Imagen.getWidth(),Imagen.getHeight(),imagenO.getType());
         Matriz = new int[ancho][alto];
         for(int i=0; i<ancho;i++){
                 for(int j=0; j<alto; j++){
-                    Color c = new Color(imagem.getRGB(i, j));
+                    Color c = new Color(imagenO.getRGB(i, j));
                     int TonoGris=(c.getRed()+c.getGreen()+c.getBlue())/3;
                     if(TonoGris>=150){
                             c=new Color (media, media, media);
                     }else{
                             c= new Color(TonoGris,TonoGris,TonoGris);
                     }
-                    imagem.setRGB(i, j, c.getRGB());
+                    imagenF.setRGB(i, j, c.getRGB());
                     Matriz[i][j]=TonoGris;
                 }
         }
-        return imagem;
+        return imagenF;
     }
     
     public BufferedImage recibeMediana(int mediana) throws IOException{
-        BufferedImage imagen = Imagen;
-        int w = imagen.getWidth();
-        int h = imagen.getHeight();
-        Matriz=new int[w][h];
-        for(int i=0; i<w;i++){
-            for(int j=0; j<h; j++){
-                Color c=new Color(imagen.getRGB(i, j));
+        BufferedImage imagenO = Imagen;
+        int ancho = imagenO.getWidth();
+        int alto = imagenO.getHeight();
+        BufferedImage imagenF = new BufferedImage(Imagen.getWidth(),Imagen.getHeight(),imagenO.getType());
+        for(int i=0; i<ancho;i++){
+            for(int j=0; j<alto; j++){
+                Color c=new Color(imagenO.getRGB(i, j));
                 int TonoGris = (c.getRed()+c.getGreen()+c.getBlue())/3;
                 if(TonoGris>=150){
                     c=new Color(mediana,mediana,mediana);
                 }else{
                     c= new Color(TonoGris,TonoGris,TonoGris);
                 }
-                imagen.setRGB(i, j, c.getRGB());
-                Matriz[i][j]=TonoGris;
+                imagenF.setRGB(i, j, c.getRGB());
             }
         }
-        return imagen;
+        return imagenF;
     }
     
     public BufferedImage recibeModa(int moda) throws IOException{
-        BufferedImage imagen = Imagen;
-        int ancho = imagen.getWidth();
-        int alto = imagen.getHeight();
-        Matriz=new int[ancho][alto];
+        BufferedImage imagenO = Imagen;
+        int ancho = imagenO.getWidth();
+        int alto = imagenO.getHeight();
+        BufferedImage imagenF = new BufferedImage(Imagen.getWidth(),Imagen.getHeight(),imagenO.getType());
         for(int i=0; i<ancho;i++){
             for(int j=0; j<alto; j++){
-                Color c=new Color(imagen.getRGB(i, j));
+                Color c=new Color(imagenO.getRGB(i, j));
                 int TonoGris = (c.getRed()+c.getGreen()+c.getBlue())/3;
                 if(TonoGris>=150){
                     c=new Color(moda,moda,moda);
                 }else{
                     c= new Color(TonoGris,TonoGris,TonoGris);
                 }
-                imagen.setRGB(i, j, c.getRGB());
-                Matriz[i][j]=TonoGris;
+                imagenF.setRGB(i, j, c.getRGB());
             }
         }
-        return imagen;
+        return imagenF;
     }
     
     public BufferedImage recibeMediaBlanco(int media) throws IOException {	
-        BufferedImage imagem = Imagen;
-        int ancho = imagem.getWidth();
-        int alto = imagem.getHeight();
+        BufferedImage imagenO = Imagen;
+        int ancho = imagenO.getWidth();
+        int alto = imagenO.getHeight();
+        BufferedImage imagenF = new BufferedImage(Imagen.getWidth(),Imagen.getHeight(),imagenO.getType());
         Matriz = new int[ancho][alto];
         for(int i=0; i<ancho;i++){
                 for(int j=0; j<alto; j++){
-                    Color c = new Color(imagem.getRGB(i, j));
+                    Color c = new Color(imagenO.getRGB(i, j));
                     int TonoGris=(c.getRed()+c.getGreen()+c.getBlue())/3;
                     if(TonoGris>media){
                             c=new Color (255, 255, 255);
                     }else{
                             c= new Color(TonoGris,TonoGris,TonoGris);
                     }
-                    imagem.setRGB(i, j, c.getRGB());
+                    imagenF.setRGB(i, j, c.getRGB());
                     Matriz[i][j]=TonoGris;
                 }
         }
-        return imagem;
+        return imagenF;
     }
     
     public BufferedImage recibeMedianayMedia(int mediana, int media) throws IOException{
-        BufferedImage imagen = Imagen;
-        int alto = imagen.getHeight();
-        int ancho = imagen.getWidth();
-        Matriz = new int [ancho][alto];
+        BufferedImage imagenO = Imagen;
+        int alto = imagenO.getHeight();
+        int ancho = imagenO.getWidth();
+        BufferedImage imagenF = new BufferedImage(Imagen.getWidth(),Imagen.getHeight(),imagenO.getType());
         for(int i=0;i<ancho;i++){
             for(int j=0;j<alto;j++){
-                Color c = new Color(imagen.getRGB(i, j));
+                Color c = new Color(imagenO.getRGB(i, j));
                 int TonoGris = (c.getRed()+c.getGreen()+c.getBlue())/3;
                 if(TonoGris>media){
                     c = new Color(255,255,255);
@@ -314,11 +296,10 @@ public class Metodos {
                 else{
                     c = new Color(TonoGris,TonoGris,TonoGris);
                 }
-                imagen.setRGB(i, j, c.getRGB());
-                Matriz[i][j]=TonoGris;
+                imagenF.setRGB(i, j, c.getRGB());
             }
         }
-        return imagen;
+        return imagenF;
     }
     
     public BufferedImage Reflejoejex() throws IOException{
