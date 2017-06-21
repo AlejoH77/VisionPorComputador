@@ -44,7 +44,6 @@ public class Main extends JFrame{
     JMenu estadistica = new JMenu("Estadistica");
     JMenu transformaciongeo = new JMenu("Transformaciones Geometricas");
     JMenu segmentacion = new JMenu("Segmentación");
-    JMenu img = new JMenu("Imagen");
     ButtonGroup bg = new ButtonGroup();
     JRadioButton tco = new JRadioButton("Trabajar con Imagen Original");//trabajar con orginial
     JRadioButton tcm = new JRadioButton("Trabajar con Imagen Modificada");//trabajar con modificada
@@ -165,13 +164,6 @@ public class Main extends JFrame{
                 JMenuItem limitarizacion = new JMenuItem("Limitarización");
                 limitarizacion.addActionListener(menu);
                 segmentacion.add(limitarizacion);
-                JMenuItem original = new JMenuItem("Original");
-                original.addActionListener(menu);
-                img.add(original);
-                JMenuItem ifinal = new JMenuItem("Final");
-                ifinal.addActionListener(menu);
-                img.add(ifinal);
-                barraMenu.add(img);
                 
                 //grupo de botones
                 tco.addActionListener(menu);
@@ -534,6 +526,18 @@ public class Main extends JFrame{
             if(comandoAccionm.equals("Promedio Ponderado 2")){
                 try{
                    bfImage=metodos.PromedioP2();
+                   BfImagenF=bfImage;
+                }catch (IOException exep){
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Brillo")){
+                int brillo = Integer.parseInt(JOptionPane.showInputDialog(null,"Introduzca el brillo","Brillo",JOptionPane.QUESTION_MESSAGE));
+                try{
+                   bfImage=metodos.Brillo(brillo);
                    BfImagenF=bfImage;
                 }catch (IOException exep){
                     exep.printStackTrace();

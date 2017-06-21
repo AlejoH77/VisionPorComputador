@@ -522,13 +522,12 @@ public class Metodos {
                         int rojo = c.getRed()+brillo;
                         int verde = c.getGreen()+brillo;
                         int azul = c.getBlue()+brillo;
-                        if(rojo > 255){
-                            rojo=255;
-                        }
-                        else if (rojo < 0){
-                            rojo=0;
-                        }
-                        c = new Color((int) (c.getRed()+brillo),(int)(c.getGreen()+brillo),(int)(c.getBlue()+brillo));
+                        rojo = (rojo > 255) ? 255 : rojo;
+                        rojo = (rojo < 0) ? 0 : rojo;
+                        verde = (verde > 255) ? 255 : verde;
+                        verde = (verde < 0) ? 0 : verde;
+                        azul = (azul > 255) ? 255 : azul;
+                        azul = (azul < 0) ? 0 : azul;
                         c = new Color (rojo,verde,azul);
                         imagenF.setRGB(i, j, c.getRGB());
                 }
@@ -536,17 +535,27 @@ public class Metodos {
         return imagenF;   
     }
     public BufferedImage Contraste(int contraste) throws IOException {		
-        BufferedImage imagen = Imagen;
-        int ancho = imagen.getWidth();
-        int alto = imagen.getHeight();
+        BufferedImage imagenO = Imagen;
+        int ancho = imagenO.getWidth();
+        int alto = imagenO.getHeight();
+        BufferedImage imagenF = new BufferedImage(ancho, alto, imagenO.getType());
         for(int i=0; i<ancho;i++){
                 for(int j=0; j<alto; j++){
-                        Color c = new Color(imagen.getRGB(i, j));
-                        c = new Color((int) (c.getRed()*0.5),(int)(c.getGreen()*0.419),(int)(c.getBlue()*0.081));
-                        imagen.setRGB(i, j, c.getRGB());
+                        Color c = new Color(imagenO.getRGB(i, j));
+                        int rojo = c.getRed()+contraste;
+                        int verde = c.getGreen()+contraste;
+                        int azul = c.getBlue()+contraste;
+                        rojo = (rojo > 255) ? 255 : rojo;
+                        rojo = (rojo < 0) ? 0 : rojo;
+                        verde = (verde > 255) ? 255 : verde;
+                        verde = (verde < 0) ? 0 : verde;
+                        azul = (azul > 255) ? 255 : azul;
+                        azul = (azul < 0) ? 0 : azul;
+                        c = new Color (rojo,verde,azul);
+                        imagenF.setRGB(i, j, c.getRGB());
                 }
         }
-        return imagen;   
+        return imagenF;   
     }
     
     public void mostraHistograma() throws IOException{
