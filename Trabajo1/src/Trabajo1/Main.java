@@ -45,6 +45,7 @@ public class Main extends JFrame{
     JMenu estadistica = new JMenu("Estadistica");
     JMenu transformaciongeo = new JMenu("Transformaciones Geometricas");
     JMenu segmentacion = new JMenu("Segmentación");
+    JMenu bordes = new JMenu("Detección de Bordes");
     ButtonGroup bg = new ButtonGroup();
     JRadioButton tco = new JRadioButton("Trabajar con Imagen Original");//trabajar con orginial
     JRadioButton tcm = new JRadioButton("Trabajar con Imagen Modificada");//trabajar con modificada
@@ -165,6 +166,20 @@ public class Main extends JFrame{
                 JMenuItem limitarizacion = new JMenuItem("Limitarización");
                 limitarizacion.addActionListener(menu);
                 segmentacion.add(limitarizacion);
+                barraMenu.add(bordes);
+                bordes.setEnabled(false);
+                JMenuItem roberts = new JMenuItem("Roberts");
+                roberts.addActionListener(menu);
+                bordes.add(roberts);
+                JMenuItem sobel = new JMenuItem("Sobel");
+                sobel.addActionListener(menu);
+                bordes.add(sobel);
+                JMenuItem operadorKirsch = new JMenuItem("Operador de Kirsch");
+                operadorKirsch.addActionListener(menu);
+                bordes.add(operadorKirsch);
+                JMenuItem operadorRobinson = new JMenuItem("Operador de Robinson");
+                operadorRobinson.addActionListener(menu);
+                bordes.add(operadorRobinson);
                 
                 //grupo de botones
                 tco.addActionListener(menu);
@@ -319,6 +334,7 @@ public class Main extends JFrame{
                     transformaciongeo.setEnabled(true);
                     estadistica.setEnabled(true);
                     segmentacion.setEnabled(true);
+                    bordes.setEnabled(true);
                     tco.setEnabled(true);
                     tcm.setEnabled(true);
                     try {
@@ -608,6 +624,54 @@ public class Main extends JFrame{
                 int umbral = Integer.parseInt(JOptionPane.showInputDialog(null,"Introduzca el umbral","Umbral",JOptionPane.QUESTION_MESSAGE));
                 try{
                    bfImage=metodos.Limitarizacion(umbral);
+                   BfImagenF=bfImage;
+                }catch (IOException exep){
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Roberts")){
+                int umbral = Integer.parseInt(JOptionPane.showInputDialog(null,"Introduzca el umbral","Umbral",JOptionPane.QUESTION_MESSAGE));
+                try{
+                   bfImage=metodos.Roberts(umbral);
+                   BfImagenF=bfImage;
+                }catch (IOException exep){
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Sobel")){
+                int umbral = Integer.parseInt(JOptionPane.showInputDialog(null,"Introduzca el umbral","Umbral",JOptionPane.QUESTION_MESSAGE));
+                try{
+                   bfImage=metodos.Sobel(umbral);
+                   BfImagenF=bfImage;
+                }catch (IOException exep){
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Operador de Kirsch")){
+                int umbral = Integer.parseInt(JOptionPane.showInputDialog(null,"Introduzca el umbral","Umbral",JOptionPane.QUESTION_MESSAGE));
+                try{
+                   bfImage=metodos.Kirsch(umbral);
+                   BfImagenF=bfImage;
+                }catch (IOException exep){
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Operador de Robinson")){
+                int umbral = Integer.parseInt(JOptionPane.showInputDialog(null,"Introduzca el umbral","Umbral",JOptionPane.QUESTION_MESSAGE));
+                try{
+                   bfImage=metodos.Robinson(umbral);
                    BfImagenF=bfImage;
                 }catch (IOException exep){
                     exep.printStackTrace();
