@@ -40,9 +40,27 @@ public class Metodos {
     public int[][] MatrizTransformacion = new int[3][3];
     public double[][] MatrizTransformacionD = new double[3][3];
     public int[][] Filtro = null;
-    public int[][] xKernel = null;
-    public int[][] yKernel = null;
+    public int[][] xKernel = new int[3][3];
+    public int[][] yKernel = new int[3][3];
     public int a = 0;
+    //Mascaras Kirsch
+    public int[][] Mascara1K = {{5, -3, -3}, {5, 0, -3}, {5, -3, -3}};
+    public int[][] Mascara2K = {{-3, -3, -3}, {5, 0, -3}, {5, 5, -3}};
+    public int[][] Mascara3K = {{-3, -3, -3}, {-3, 0, -3}, {5, 5, 5}};
+    public int[][] Mascara4K = {{-3, -3, -3}, {-3, 0, 5}, {-3, 5, 5}};
+    public int[][] Mascara5K = {{-3, -3, 5}, {-3, 0, 5}, {-3, -3, 5}};
+    public int[][] Mascara6K = {{-3, 5, 5}, {-3, 0, 5}, {-3, -3, -3}};
+    public int[][] Mascara7K = {{5, 5, 5}, {-3, 0, -3}, {-3, -3, -3}};
+    public int[][] Mascara8K = {{5, 5, -3}, {5, 0, -3}, {-3, -3, -3}};
+    //Mascaras Robinson
+    public int[][] Mascara1R = {{1, 0, -1}, {2, 0, -2}, {1, 0, -1}};
+    public int[][] Mascara2R = {{0, -1, -2}, {1, 0, -1}, {2, 1, 0}};
+    public int[][] Mascara3R = {{-1, -2, -1}, {0, 0, 0}, {1, 2, 1}};
+    public int[][] Mascara4R = {{-2, -1, 0}, {-1, 0, 1}, {0, 1, 2}};
+    public int[][] Mascara5R = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
+    public int[][] Mascara6R = {{0, 1, 2}, {-1, 0, 1}, {-2, -1, 0}};
+    public int[][] Mascara7R = {{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};
+    public int[][] Mascara8R = {{2, 1, 0}, {1, 0, -1}, {0, -1, -2}};
 
     public Metodos(BufferedImage imagen) {//constructor
         Imagen = imagen;
@@ -103,44 +121,100 @@ public class Metodos {
         total = total + matriz[2][1] * valor3;
         return total;
     }
-    
-    public int OFiltroProm(int i, int j, int parametro){//operaciones filtro promedio
+
+    public void MatricesRoberts() {
+        xKernel[0][0] = 0;
+        xKernel[0][1] = 0;
+        xKernel[0][2] = 0;
+        xKernel[1][0] = 0;
+        xKernel[1][1] = -1;
+        xKernel[1][2] = 0;
+        xKernel[2][0] = 0;
+        xKernel[2][1] = 0;
+        xKernel[2][2] = 1;
+        yKernel[0][0] = 0;
+        yKernel[0][1] = 0;
+        yKernel[0][2] = 0;
+        yKernel[1][0] = 0;
+        yKernel[1][1] = 0;
+        yKernel[1][2] = -1;
+        yKernel[2][0] = 0;
+        yKernel[2][1] = 1;
+        yKernel[2][2] = 0;
+    }
+
+    public void MatricesSobel() {
+        xKernel[0][0] = 1;
+        xKernel[0][1] = 0;
+        xKernel[0][2] = -1;
+        xKernel[1][0] = 2;
+        xKernel[1][1] = 0;
+        xKernel[1][2] = -2;
+        xKernel[2][0] = 1;
+        xKernel[2][1] = 0;
+        xKernel[2][2] = -1;
+        yKernel[0][0] = 1;
+        yKernel[0][1] = 2;
+        yKernel[0][2] = 1;
+        yKernel[1][0] = 0;
+        yKernel[1][1] = 0;
+        yKernel[1][2] = 0;
+        yKernel[2][0] = -1;
+        yKernel[2][1] = -2;
+        yKernel[2][2] = -1;
+    }
+
+    public int Convolucion(int i, int j, int[][] matriz) {
+        int total;
+        total = Matriz[i - 1][j - 1] * matriz[0][0];
+        total = total + Matriz[i][j - 1] * matriz[0][1];
+        total = total + Matriz[i + 1][j - 1] * matriz[0][2];
+        total = total + Matriz[i - 1][j] * matriz[1][0];
+        total = total + Matriz[i][j] * matriz[1][1];
+        total = total + Matriz[i + 1][j] * matriz[1][2];
+        total = total + Matriz[i - 1][j + 1] * matriz[2][0];
+        total = total + Matriz[i][j + 1] * matriz[2][1];
+        total = total + Matriz[i + 1][j + 1] * matriz[2][2];
+        return total;
+    }
+
+    public int OFiltroProm(int i, int j, int parametro) {//operaciones filtro promedio
         int resultado;
-        resultado = (Matriz[i-1][j-1]*parametro)+(Matriz[i][j-1]*parametro)+(Matriz[i+1][j-1]*parametro)+(Matriz[i-1][j]*parametro)+(Matriz[i][j]*parametro)+(Matriz[i+1][j]*parametro)+(Matriz[i-1][j+1]*parametro)+(Matriz[i][j+1]*parametro)+(Matriz[i+1][j+1]*parametro);
-        resultado = (resultado)/9;
+        resultado = (Matriz[i - 1][j - 1] * parametro) + (Matriz[i][j - 1] * parametro) + (Matriz[i + 1][j - 1] * parametro) + (Matriz[i - 1][j] * parametro) + (Matriz[i][j] * parametro) + (Matriz[i + 1][j] * parametro) + (Matriz[i - 1][j + 1] * parametro) + (Matriz[i][j + 1] * parametro) + (Matriz[i + 1][j + 1] * parametro);
+        resultado = (resultado) / 9;
         return resultado;
     }
-    
-    public int OFiltroMediana(int i, int j){//operaciones filtro mediana
+
+    public int OFiltroMediana(int i, int j) {//operaciones filtro mediana
         int mediana;
         int[] vector = new int[9];
-        vector[0]=Matriz[i-1][j-1];
-        vector[1]=Matriz[i][j-1];
-        vector[2]=Matriz[i+1][j-1];
-        vector[3]=Matriz[i-1][j];
-        vector[4]=Matriz[i][j];
-        vector[5]=Matriz[i+1][j];
-        vector[6]=Matriz[i-1][j+1];
-        vector[7]=Matriz[i][j+1];
-        vector[8]=Matriz[i+1][j+1];
+        vector[0] = Matriz[i - 1][j - 1];
+        vector[1] = Matriz[i][j - 1];
+        vector[2] = Matriz[i + 1][j - 1];
+        vector[3] = Matriz[i - 1][j];
+        vector[4] = Matriz[i][j];
+        vector[5] = Matriz[i + 1][j];
+        vector[6] = Matriz[i - 1][j + 1];
+        vector[7] = Matriz[i][j + 1];
+        vector[8] = Matriz[i + 1][j + 1];
         Arrays.sort(vector);
-        mediana=vector[4];
+        mediana = vector[4];
         return mediana;
     }
-    
-    public int OFiltroModa(int i, int j){
-        int moda=0;
+
+    public int OFiltroModa(int i, int j) {
+        int moda = 0;
         int cantveces = 0;
         int[] vector = new int[255];
-        vector[Matriz[i-1][j-1]]++;
-        vector[Matriz[i][j-1]]++;
-        vector[Matriz[i+1][j-1]]++;
-        vector[Matriz[i-1][j]]++;
+        vector[Matriz[i - 1][j - 1]]++;
+        vector[Matriz[i][j - 1]]++;
+        vector[Matriz[i + 1][j - 1]]++;
+        vector[Matriz[i - 1][j]]++;
         vector[Matriz[i][j]]++;
-        vector[Matriz[i+1][j]]++;
-        vector[Matriz[i-1][j+1]]++;
-        vector[Matriz[i][j+1]]++;
-        vector[Matriz[i+1][j+1]]++;
+        vector[Matriz[i + 1][j]]++;
+        vector[Matriz[i - 1][j + 1]]++;
+        vector[Matriz[i][j + 1]]++;
+        vector[Matriz[i + 1][j + 1]]++;
         for (int a = 0; a < vector.length; a++) {
             if (vector[a] > cantveces) {
                 cantveces = vector[a];
@@ -149,12 +223,54 @@ public class Metodos {
         }
         return moda;
     }
-    
-    public int OFiltroGauss(int i, int j){//operaciones filtro promedio
+
+    public int OFiltroGauss(int i, int j) {//operaciones filtro promedio
         int resultado;
-        resultado = (Matriz[i-1][j-1]*1)+(Matriz[i][j-1]*2)+(Matriz[i+1][j-1]*1)+(Matriz[i-1][j]*2)+(Matriz[i][j]*4)+(Matriz[i+1][j]*2)+(Matriz[i-1][j+1]*1)+(Matriz[i][j+1]*2)+(Matriz[i+1][j+1]*1);
-        resultado = (resultado)/16;
+        resultado = (Matriz[i - 1][j - 1] * 1) + (Matriz[i][j - 1] * 2) + (Matriz[i + 1][j - 1] * 1) + (Matriz[i - 1][j] * 2) + (Matriz[i][j] * 4) + (Matriz[i + 1][j] * 2) + (Matriz[i - 1][j + 1] * 1) + (Matriz[i][j + 1] * 2) + (Matriz[i + 1][j + 1] * 1);
+        resultado = (resultado) / 16;
         return resultado;
+    }
+
+    public int OKirsch(int i, int j) {
+        int mg1, mg2, mg3, mg4, mg5, mg6, mg7, mg8;
+        mg1 = Convolucion(i, j, Mascara1K);
+        mg2 = Convolucion(i, j, Mascara2K);
+        mg3 = Convolucion(i, j, Mascara3K);
+        mg4 = Convolucion(i, j, Mascara4K);
+        mg5 = Convolucion(i, j, Mascara5K);
+        mg6 = Convolucion(i, j, Mascara6K);
+        mg7 = Convolucion(i, j, Mascara7K);
+        mg8 = Convolucion(i, j, Mascara8K);
+        int MagnitudGradiente = mg1;
+        MagnitudGradiente = (MagnitudGradiente < mg2) ? mg2 : MagnitudGradiente;
+        MagnitudGradiente = (MagnitudGradiente < mg3) ? mg3 : MagnitudGradiente;
+        MagnitudGradiente = (MagnitudGradiente < mg4) ? mg4 : MagnitudGradiente;
+        MagnitudGradiente = (MagnitudGradiente < mg5) ? mg5 : MagnitudGradiente;
+        MagnitudGradiente = (MagnitudGradiente < mg6) ? mg6 : MagnitudGradiente;
+        MagnitudGradiente = (MagnitudGradiente < mg7) ? mg7 : MagnitudGradiente;
+        MagnitudGradiente = (MagnitudGradiente < mg8) ? mg8 : MagnitudGradiente;
+        return MagnitudGradiente;
+    }
+    
+    public int ORobinson(int i, int j) {
+        int mg1, mg2, mg3, mg4, mg5, mg6, mg7, mg8;
+        mg1 = Convolucion(i, j, Mascara1R);
+        mg2 = Convolucion(i, j, Mascara2R);
+        mg3 = Convolucion(i, j, Mascara3R);
+        mg4 = Convolucion(i, j, Mascara4R);
+        mg5 = Convolucion(i, j, Mascara5R);
+        mg6 = Convolucion(i, j, Mascara6R);
+        mg7 = Convolucion(i, j, Mascara7R);
+        mg8 = Convolucion(i, j, Mascara8R);
+        int MagnitudGradiente = mg1;
+        MagnitudGradiente = (MagnitudGradiente < mg2) ? mg2 : MagnitudGradiente;
+        MagnitudGradiente = (MagnitudGradiente < mg3) ? mg3 : MagnitudGradiente;
+        MagnitudGradiente = (MagnitudGradiente < mg4) ? mg4 : MagnitudGradiente;
+        MagnitudGradiente = (MagnitudGradiente < mg5) ? mg5 : MagnitudGradiente;
+        MagnitudGradiente = (MagnitudGradiente < mg6) ? mg6 : MagnitudGradiente;
+        MagnitudGradiente = (MagnitudGradiente < mg7) ? mg7 : MagnitudGradiente;
+        MagnitudGradiente = (MagnitudGradiente < mg8) ? mg8 : MagnitudGradiente;
+        return MagnitudGradiente;
     }
 
     public int CalcularMedia() throws IOException {
@@ -246,7 +362,7 @@ public class Metodos {
         JOptionPane.showMessageDialog(null, "Varianza: " + varianza);
         return varianza;
     }
-    
+
     public BufferedImage ImagenGrisYMatriz() throws IOException {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
@@ -627,15 +743,15 @@ public class Metodos {
         }
         return imagenF;
     }
-    
+
     public BufferedImage FiltroPromedio() throws IOException {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
         imagenF = ImagenGrisYMatriz();
-        for (int i = 1; i < ancho-1; i++) {
-            for (int j = 1; j < alto-1; j++) {
-                int TonoGris = OFiltroProm(i,j,1);
+        for (int i = 1; i < ancho - 1; i++) {
+            for (int j = 1; j < alto - 1; j++) {
+                int TonoGris = OFiltroProm(i, j, 1);
                 TonoGris = (TonoGris > 255) ? 255 : TonoGris;
                 Color c = new Color(TonoGris, TonoGris, TonoGris);
                 imagenF.setRGB(i, j, c.getRGB());
@@ -643,30 +759,30 @@ public class Metodos {
         }
         return imagenF;
     }
-    
+
     public BufferedImage FiltroMediana() throws IOException {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
         imagenF = ImagenGrisYMatriz();
-        for (int i = 1; i < ancho-1; i++) {
-            for (int j = 1; j < alto-1; j++) {
-                int TonoGris = OFiltroMediana(i,j);
+        for (int i = 1; i < ancho - 1; i++) {
+            for (int j = 1; j < alto - 1; j++) {
+                int TonoGris = OFiltroMediana(i, j);
                 Color c = new Color(TonoGris, TonoGris, TonoGris);
                 imagenF.setRGB(i, j, c.getRGB());
             }
         }
         return imagenF;
     }
-    
+
     public BufferedImage FiltroModa() throws IOException {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
         imagenF = ImagenGrisYMatriz();
-        for (int i = 1; i < ancho-1; i++) {
-            for (int j = 1; j < alto-1; j++) {
-                int TonoGris = OFiltroModa(i,j);
+        for (int i = 1; i < ancho - 1; i++) {
+            for (int j = 1; j < alto - 1; j++) {
+                int TonoGris = OFiltroModa(i, j);
                 TonoGris = (TonoGris > 255) ? 255 : TonoGris;
                 Color c = new Color(TonoGris, TonoGris, TonoGris);
                 imagenF.setRGB(i, j, c.getRGB());
@@ -674,15 +790,15 @@ public class Metodos {
         }
         return imagenF;
     }
-    
+
     public BufferedImage FiltroGauss() throws IOException {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
         imagenF = ImagenGrisYMatriz();
-        for (int i = 1; i < ancho-1; i++) {
-            for (int j = 1; j < alto-1; j++) {
-                int TonoGris = OFiltroGauss(i,j);
+        for (int i = 1; i < ancho - 1; i++) {
+            for (int j = 1; j < alto - 1; j++) {
+                int TonoGris = OFiltroGauss(i, j);
                 TonoGris = (TonoGris > 255) ? 255 : TonoGris;
                 Color c = new Color(TonoGris, TonoGris, TonoGris);
                 imagenF.setRGB(i, j, c.getRGB());
@@ -690,22 +806,103 @@ public class Metodos {
         }
         return imagenF;
     }
-    
+
     public BufferedImage Limitarizacion(int umbral) throws IOException {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
         imagenF = ImagenGrisYMatriz();
-        for (int i = 1; i < ancho-1; i++) {
-            for (int j = 1; j < alto-1; j++) {
+        for (int i = 0; i < ancho; i++) {
+            for (int j = 0; j < alto; j++) {
                 int TonoGris = Matriz[i][j];
-                if(TonoGris>umbral){
-                    TonoGris=255;
-                }
-                else{
-                    TonoGris=0;
+                if (TonoGris > umbral) {
+                    TonoGris = 255;
+                } else {
+                    TonoGris = 0;
                 }
                 Color c = new Color(TonoGris, TonoGris, TonoGris);
+                imagenF.setRGB(i, j, c.getRGB());
+            }
+        }
+        return imagenF;
+    }
+
+    public BufferedImage Roberts(int umbral) throws IOException {
+        int ancho = Imagen.getWidth();
+        int alto = Imagen.getHeight();
+        BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
+        imagenF = ImagenGrisYMatriz();
+        MatricesRoberts();
+        for (int i = 1; i < ancho - 1; i++) {
+            for (int j = 1; j < alto - 1; j++) {
+                int Gradientex = Convolucion(i, j, xKernel);
+                int Gradientey = Convolucion(i, j, yKernel);
+                int Gradiente = (int) Math.sqrt(Math.pow(Gradientex, 2) + Math.pow(Gradientey, 2));
+                int pixel = 0;
+                if (Gradiente > umbral) {
+                    pixel = 255;
+                }
+                Color c = new Color(pixel, pixel, pixel);
+                imagenF.setRGB(i, j, c.getRGB());
+            }
+        }
+        return imagenF;
+    }
+
+    public BufferedImage Sobel(int umbral) throws IOException {
+        int ancho = Imagen.getWidth();
+        int alto = Imagen.getHeight();
+        BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
+        imagenF = ImagenGrisYMatriz();
+        MatricesSobel();
+        for (int i = 1; i < ancho - 1; i++) {
+            for (int j = 1; j < alto - 1; j++) {
+                int Gradientex = Convolucion(i, j, xKernel);
+                int Gradientey = Convolucion(i, j, yKernel);
+                int Gradiente = (int) Math.sqrt(Math.pow(Gradientex, 2) + Math.pow(Gradientey, 2));
+                int pixel = 0;
+                if (Gradiente > umbral) {
+                    pixel = 255;
+                }
+                Color c = new Color(pixel, pixel, pixel);
+                imagenF.setRGB(i, j, c.getRGB());
+            }
+        }
+        return imagenF;
+    }
+
+    public BufferedImage Kirsch(int umbral) throws IOException {
+        int ancho = Imagen.getWidth();
+        int alto = Imagen.getHeight();
+        BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
+        imagenF = ImagenGrisYMatriz();
+        for (int i = 1; i < ancho - 1; i++) {
+            for (int j = 1; j < alto - 1; j++) {
+                int Gradiente = OKirsch(i,j);
+                int pixel = 0;
+                if (Gradiente > umbral) {
+                    pixel = 255;
+                }
+                Color c = new Color(pixel, pixel, pixel);
+                imagenF.setRGB(i, j, c.getRGB());
+            }
+        }
+        return imagenF;
+    }
+    
+    public BufferedImage Robinson(int umbral) throws IOException {
+        int ancho = Imagen.getWidth();
+        int alto = Imagen.getHeight();
+        BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
+        imagenF = ImagenGrisYMatriz();
+        for (int i = 1; i < ancho - 1; i++) {
+            for (int j = 1; j < alto - 1; j++) {
+                int Gradiente = ORobinson(i,j);
+                int pixel = 0;
+                if (Gradiente > umbral) {
+                    pixel = 255;
+                }
+                Color c = new Color(pixel, pixel, pixel);
                 imagenF.setRGB(i, j, c.getRGB());
             }
         }
@@ -716,17 +913,19 @@ public class Metodos {
         BufferedImage imagen = Imagen;
         int ancho = imagen.getWidth();
         int alto = imagen.getHeight();
+        BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
+        Matriz = new int[Imagen.getWidth()][Imagen.getHeight()];
         for (int i = 0; i < ancho; i++) {
             for (int j = 0; j < alto; j++) {
                 Color c = new Color(imagen.getRGB(i, j));
                 int TonoGris = (c.getRed() + c.getGreen() + c.getBlue()) / 3;
                 c = new Color(TonoGris, TonoGris, TonoGris);
-                imagen.setRGB(i, j, c.getRGB());
+                imagenF.setRGB(i, j, c.getRGB());
                 Matriz[i][j] = TonoGris;
             }
         }
         Histograma hist = new Histograma();
-        hist.GenerarHistograma(imagen, Matriz);
+        hist.GenerarHistograma(imagenF, Matriz);
     }
 
 }
