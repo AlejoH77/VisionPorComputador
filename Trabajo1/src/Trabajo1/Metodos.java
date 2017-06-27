@@ -37,6 +37,9 @@ public class Metodos {
 
     public BufferedImage Imagen = null;
     public int[][] Matriz = null;
+    public int[][] MatrizR = null;
+    public int[][] MatrizG = null;
+    public int[][] MatrizB = null;
     public int[][] MatrizTransformacion = new int[3][3];
     public double[][] MatrizTransformacionD = new double[3][3];
     public int[][] Filtro = null;
@@ -273,7 +276,7 @@ public class Metodos {
         return MagnitudGradiente;
     }
 
-    public int ODilatacion(int i, int j) {
+    public int ODilatacion(int i, int j, int[][] Matriz) {
         int maximo;
         maximo = Matriz[i - 1][j - 1];
         if (maximo < Matriz[i][j - 1]) {
@@ -303,7 +306,97 @@ public class Metodos {
         return maximo;
     }
     
-    public int OErosion(int i, int j) {
+    public int ODilatacionR(int i, int j) {
+        int maximo;
+        maximo = MatrizR[i - 1][j - 1];
+        if (maximo < MatrizR[i][j - 1]) {
+            maximo = MatrizR[i][j - 1];
+        }
+        if (maximo < MatrizR[i + 1][j - 1]) {
+            maximo = MatrizR[i + 1][j - 1];
+        }
+        if (maximo < MatrizR[i - 1][j]) {
+            maximo = MatrizR[i - 1][j];
+        }
+        if (maximo < MatrizR[i][j]) {
+            maximo = MatrizR[i][j];
+        }
+        if (maximo < MatrizR[i + 1][j]) {
+            maximo = MatrizR[i + 1][j];
+        }
+        if (maximo < MatrizR[i - 1][j + 1]) {
+            maximo = MatrizR[i - 1][j];
+        }
+        if (maximo < MatrizR[i][j + 1]) {
+            maximo = MatrizR[i][j];
+        }
+        if (maximo < MatrizR[i + 1][j + 1]) {
+            maximo = MatrizR[i + 1][j];
+        }
+        return maximo;
+    }
+    
+    public int ODilatacionG(int i, int j) {
+        int maximo;
+        maximo = MatrizG[i - 1][j - 1];
+        if (maximo < MatrizG[i][j - 1]) {
+            maximo = MatrizG[i][j - 1];
+        }
+        if (maximo < MatrizG[i + 1][j - 1]) {
+            maximo = MatrizG[i + 1][j - 1];
+        }
+        if (maximo < MatrizG[i - 1][j]) {
+            maximo = MatrizG[i - 1][j];
+        }
+        if (maximo < MatrizG[i][j]) {
+            maximo = MatrizG[i][j];
+        }
+        if (maximo < MatrizG[i + 1][j]) {
+            maximo = MatrizG[i + 1][j];
+        }
+        if (maximo < MatrizG[i - 1][j + 1]) {
+            maximo = MatrizG[i - 1][j];
+        }
+        if (maximo < MatrizG[i][j + 1]) {
+            maximo = MatrizG[i][j];
+        }
+        if (maximo < MatrizG[i + 1][j + 1]) {
+            maximo = MatrizG[i + 1][j];
+        }
+        return maximo;
+    }
+    
+    public int ODilatacionB(int i, int j) {
+        int maximo;
+        maximo = MatrizB[i - 1][j - 1];
+        if (maximo < MatrizB[i][j - 1]) {
+            maximo = MatrizB[i][j - 1];
+        }
+        if (maximo < MatrizB[i + 1][j - 1]) {
+            maximo = MatrizB[i + 1][j - 1];
+        }
+        if (maximo < MatrizB[i - 1][j]) {
+            maximo = MatrizB[i - 1][j];
+        }
+        if (maximo < MatrizB[i][j]) {
+            maximo = MatrizB[i][j];
+        }
+        if (maximo < MatrizB[i + 1][j]) {
+            maximo = MatrizB[i + 1][j];
+        }
+        if (maximo < MatrizB[i - 1][j + 1]) {
+            maximo = MatrizB[i - 1][j];
+        }
+        if (maximo < MatrizB[i][j + 1]) {
+            maximo = MatrizB[i][j];
+        }
+        if (maximo < MatrizB[i + 1][j + 1]) {
+            maximo = MatrizB[i + 1][j];
+        }
+        return maximo;
+    }
+    
+    public int OErosion(int i, int j, int[][] Matriz) {
         int minimo;
         minimo = Matriz[i - 1][j - 1];
         if (minimo > Matriz[i][j - 1]) {
@@ -438,6 +531,22 @@ public class Metodos {
             }
         }
         return imagenF;
+    }
+    
+    public void MatricesColores(){
+        int ancho = Imagen.getWidth();
+        int alto = Imagen.getHeight();
+        MatrizR = new int [ancho][alto];
+        MatrizG = new int [ancho][alto];
+        MatrizB = new int [ancho][alto];
+        for (int i = 0; i < ancho; i++) {
+            for (int j = 0; j < alto; j++) {
+                Color c = new Color(Imagen.getRGB(i, j));
+                MatrizR[i][j] = c.getRed();
+                MatrizG[i][j] = c.getGreen();
+                MatrizB[i][j] = c.getBlue();
+            }
+        }
     }
 
     public BufferedImage recibeMedia(int media) throws IOException {
@@ -968,16 +1077,18 @@ public class Metodos {
         }
         return imagenF;
     }
-
+    
     public BufferedImage Dilatacion() throws IOException {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
-        imagenF = ImagenGrisYMatriz();
+        MatricesColores();
         for (int i = 1; i < ancho - 1; i++) {
             for (int j = 1; j < alto - 1; j++) {
-                int pixel = ODilatacion(i, j);
-                Color c = new Color(pixel, pixel, pixel);
+                int pixelr = ODilatacion(i, j, MatrizR);
+                int pixelg = ODilatacion(i, j, MatrizG);
+                int pixelb = ODilatacion(i, j, MatrizB);
+                Color c = new Color(pixelr, pixelg, pixelb);
                 imagenF.setRGB(i - 1, j - 1, c.getRGB());
                 imagenF.setRGB(i, j - 1, c.getRGB());
                 imagenF.setRGB(i + 1, j - 1, c.getRGB());
@@ -991,16 +1102,18 @@ public class Metodos {
         }
         return imagenF;
     }
-    
+      
     public BufferedImage Erosion() throws IOException {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
-        imagenF = ImagenGrisYMatriz();
+        MatricesColores();
         for (int i = 1; i < ancho - 1; i++) {
             for (int j = 1; j < alto - 1; j++) {
-                int pixel = OErosion(i, j);
-                Color c = new Color(pixel, pixel, pixel);
+                int pixelr = OErosion(i, j, MatrizR);
+                int pixelg = OErosion(i, j, MatrizG);
+                int pixelb = OErosion(i, j, MatrizB);
+                Color c = new Color(pixelr, pixelg, pixelb);
                 imagenF.setRGB(i - 1, j - 1, c.getRGB());
                 imagenF.setRGB(i, j - 1, c.getRGB());
                 imagenF.setRGB(i + 1, j - 1, c.getRGB());
