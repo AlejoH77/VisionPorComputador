@@ -251,7 +251,7 @@ public class Metodos {
         MagnitudGradiente = (MagnitudGradiente < mg8) ? mg8 : MagnitudGradiente;
         return MagnitudGradiente;
     }
-    
+
     public int ORobinson(int i, int j) {
         int mg1, mg2, mg3, mg4, mg5, mg6, mg7, mg8;
         mg1 = Convolucion(i, j, Mascara1R);
@@ -271,6 +271,66 @@ public class Metodos {
         MagnitudGradiente = (MagnitudGradiente < mg7) ? mg7 : MagnitudGradiente;
         MagnitudGradiente = (MagnitudGradiente < mg8) ? mg8 : MagnitudGradiente;
         return MagnitudGradiente;
+    }
+
+    public int ODilatacion(int i, int j) {
+        int maximo;
+        maximo = Matriz[i - 1][j - 1];
+        if (maximo < Matriz[i][j - 1]) {
+            maximo = Matriz[i][j - 1];
+        }
+        if (maximo < Matriz[i + 1][j - 1]) {
+            maximo = Matriz[i + 1][j - 1];
+        }
+        if (maximo < Matriz[i - 1][j]) {
+            maximo = Matriz[i - 1][j];
+        }
+        if (maximo < Matriz[i][j]) {
+            maximo = Matriz[i][j];
+        }
+        if (maximo < Matriz[i + 1][j]) {
+            maximo = Matriz[i + 1][j];
+        }
+        if (maximo < Matriz[i - 1][j + 1]) {
+            maximo = Matriz[i - 1][j];
+        }
+        if (maximo < Matriz[i][j + 1]) {
+            maximo = Matriz[i][j];
+        }
+        if (maximo < Matriz[i + 1][j + 1]) {
+            maximo = Matriz[i + 1][j];
+        }
+        return maximo;
+    }
+    
+    public int OErosion(int i, int j) {
+        int minimo;
+        minimo = Matriz[i - 1][j - 1];
+        if (minimo > Matriz[i][j - 1]) {
+            minimo = Matriz[i][j - 1];
+        }
+        if (minimo > Matriz[i + 1][j - 1]) {
+            minimo = Matriz[i + 1][j - 1];
+        }
+        if (minimo > Matriz[i - 1][j]) {
+            minimo = Matriz[i - 1][j];
+        }
+        if (minimo > Matriz[i][j]) {
+            minimo = Matriz[i][j];
+        }
+        if (minimo > Matriz[i + 1][j]) {
+            minimo = Matriz[i + 1][j];
+        }
+        if (minimo > Matriz[i - 1][j + 1]) {
+            minimo = Matriz[i - 1][j];
+        }
+        if (minimo > Matriz[i][j + 1]) {
+            minimo = Matriz[i][j];
+        }
+        if (minimo > Matriz[i + 1][j + 1]) {
+            minimo = Matriz[i + 1][j];
+        }
+        return minimo;
     }
 
     public int CalcularMedia() throws IOException {
@@ -878,7 +938,7 @@ public class Metodos {
         imagenF = ImagenGrisYMatriz();
         for (int i = 1; i < ancho - 1; i++) {
             for (int j = 1; j < alto - 1; j++) {
-                int Gradiente = OKirsch(i,j);
+                int Gradiente = OKirsch(i, j);
                 int pixel = 0;
                 if (Gradiente > umbral) {
                     pixel = 255;
@@ -889,7 +949,7 @@ public class Metodos {
         }
         return imagenF;
     }
-    
+
     public BufferedImage Robinson(int umbral) throws IOException {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
@@ -897,13 +957,59 @@ public class Metodos {
         imagenF = ImagenGrisYMatriz();
         for (int i = 1; i < ancho - 1; i++) {
             for (int j = 1; j < alto - 1; j++) {
-                int Gradiente = ORobinson(i,j);
+                int Gradiente = ORobinson(i, j);
                 int pixel = 0;
                 if (Gradiente > umbral) {
                     pixel = 255;
                 }
                 Color c = new Color(pixel, pixel, pixel);
                 imagenF.setRGB(i, j, c.getRGB());
+            }
+        }
+        return imagenF;
+    }
+
+    public BufferedImage Dilatacion() throws IOException {
+        int ancho = Imagen.getWidth();
+        int alto = Imagen.getHeight();
+        BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
+        imagenF = ImagenGrisYMatriz();
+        for (int i = 1; i < ancho - 1; i++) {
+            for (int j = 1; j < alto - 1; j++) {
+                int pixel = ODilatacion(i, j);
+                Color c = new Color(pixel, pixel, pixel);
+                imagenF.setRGB(i - 1, j - 1, c.getRGB());
+                imagenF.setRGB(i, j - 1, c.getRGB());
+                imagenF.setRGB(i + 1, j - 1, c.getRGB());
+                imagenF.setRGB(i - 1, j, c.getRGB());
+                imagenF.setRGB(i, j, c.getRGB());
+                imagenF.setRGB(i + 1, j, c.getRGB());
+                imagenF.setRGB(i - 1, j + 1, c.getRGB());
+                imagenF.setRGB(i, j + 1, c.getRGB());
+                imagenF.setRGB(i + 1, j + 1, c.getRGB());
+            }
+        }
+        return imagenF;
+    }
+    
+    public BufferedImage Erosion() throws IOException {
+        int ancho = Imagen.getWidth();
+        int alto = Imagen.getHeight();
+        BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
+        imagenF = ImagenGrisYMatriz();
+        for (int i = 1; i < ancho - 1; i++) {
+            for (int j = 1; j < alto - 1; j++) {
+                int pixel = OErosion(i, j);
+                Color c = new Color(pixel, pixel, pixel);
+                imagenF.setRGB(i - 1, j - 1, c.getRGB());
+                imagenF.setRGB(i, j - 1, c.getRGB());
+                imagenF.setRGB(i + 1, j - 1, c.getRGB());
+                imagenF.setRGB(i - 1, j, c.getRGB());
+                imagenF.setRGB(i, j, c.getRGB());
+                imagenF.setRGB(i + 1, j, c.getRGB());
+                imagenF.setRGB(i - 1, j + 1, c.getRGB());
+                imagenF.setRGB(i, j + 1, c.getRGB());
+                imagenF.setRGB(i + 1, j + 1, c.getRGB());
             }
         }
         return imagenF;

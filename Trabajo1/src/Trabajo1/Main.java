@@ -46,6 +46,7 @@ public class Main extends JFrame{
     JMenu transformaciongeo = new JMenu("Transformaciones Geometricas");
     JMenu segmentacion = new JMenu("Segmentación");
     JMenu bordes = new JMenu("Detección de Bordes");
+    JMenu morfologiamat = new JMenu("Morfología Matematica");
     ButtonGroup bg = new ButtonGroup();
     JRadioButton tco = new JRadioButton("Trabajar con Imagen Original");//trabajar con orginial
     JRadioButton tcm = new JRadioButton("Trabajar con Imagen Modificada");//trabajar con modificada
@@ -180,6 +181,20 @@ public class Main extends JFrame{
                 JMenuItem operadorRobinson = new JMenuItem("Operador de Robinson");
                 operadorRobinson.addActionListener(menu);
                 bordes.add(operadorRobinson);
+                barraMenu.add(morfologiamat);
+                morfologiamat.setEnabled(false);
+                JMenuItem dilatacion = new JMenuItem("Dilatación");
+                dilatacion.addActionListener(menu);
+                morfologiamat.add(dilatacion);
+                JMenuItem erosion = new JMenuItem("Erosión");
+                erosion.addActionListener(menu);
+                morfologiamat.add(erosion);
+                JMenuItem abertura = new JMenuItem("Abertura");
+                abertura.addActionListener(menu);
+                morfologiamat.add(abertura);
+                JMenuItem cierre = new JMenuItem("Cierre");
+                cierre.addActionListener(menu);
+                morfologiamat.add(cierre);
                 
                 //grupo de botones
                 tco.addActionListener(menu);
@@ -335,6 +350,7 @@ public class Main extends JFrame{
                     estadistica.setEnabled(true);
                     segmentacion.setEnabled(true);
                     bordes.setEnabled(true);
+                    morfologiamat.setEnabled(true);
                     tco.setEnabled(true);
                     tcm.setEnabled(true);
                     try {
@@ -672,6 +688,54 @@ public class Main extends JFrame{
                 int umbral = Integer.parseInt(JOptionPane.showInputDialog(null,"Introduzca el umbral","Umbral",JOptionPane.QUESTION_MESSAGE));
                 try{
                    bfImage=metodos.Robinson(umbral);
+                   BfImagenF=bfImage;
+                }catch (IOException exep){
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Dilatación")){
+                try{
+                   bfImage=metodos.Dilatacion();
+                   BfImagenF=bfImage;
+                }catch (IOException exep){
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Erosión")){
+                try{
+                   bfImage=metodos.Erosion();
+                   BfImagenF=bfImage;
+                }catch (IOException exep){
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Abertura")){
+                try{
+                   bfImage=metodos.Erosion();
+                   metodos.Imagen=bfImage;
+                   bfImage=metodos.Dilatacion();
+                   BfImagenF=bfImage;
+                }catch (IOException exep){
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Cierre")){
+                try{
+                   bfImage=metodos.Dilatacion();
+                   metodos.Imagen=bfImage;
+                   bfImage=metodos.Erosion();
                    BfImagenF=bfImage;
                 }catch (IOException exep){
                     exep.printStackTrace();
