@@ -195,6 +195,9 @@ public class Main extends JFrame{
                 JMenuItem cierre = new JMenuItem("Cierre");
                 cierre.addActionListener(menu);
                 morfologiamat.add(cierre);
+                JMenuItem esqueleto = new JMenuItem("Esqueletización");
+                esqueleto.addActionListener(menu);
+                morfologiamat.add(esqueleto);
                 
                 //grupo de botones
                 tco.addActionListener(menu);
@@ -736,6 +739,17 @@ public class Main extends JFrame{
                    bfImage=metodos.Dilatacion();
                    metodos.Imagen=bfImage;
                    bfImage=metodos.Erosion();
+                   BfImagenF=bfImage;
+                }catch (IOException exep){
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Esqueletización")){
+                try{
+                   bfImage=metodos.Esqueletizacio();
                    BfImagenF=bfImage;
                 }catch (IOException exep){
                     exep.printStackTrace();

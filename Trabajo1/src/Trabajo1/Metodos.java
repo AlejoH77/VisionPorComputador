@@ -37,6 +37,7 @@ public class Metodos {
 
     public BufferedImage Imagen = null;
     public int[][] Matriz = null;
+    public boolean[][] MatrizBool = null;
     public int[][] MatrizR = null;
     public int[][] MatrizG = null;
     public int[][] MatrizB = null;
@@ -335,6 +336,102 @@ public class Metodos {
         }
         return minimo;
     }
+    
+    public int Conectividad(int i, int j, int[][] Matriz){//devuelve la conectividad
+        int conectividad=0;
+        if(Matriz[i-1][j-1]== 0 && Matriz[i][j-1]== 255){
+            conectividad++;
+        }
+        else if(Matriz[i-1][j-1]== 255 && Matriz[i][j-1]== 0){
+            conectividad++;
+        }
+        if(Matriz[i][j-1]== 0 && Matriz[i+1][j-1]== 255){
+            conectividad++;
+        }
+        else if(Matriz[i][j-1]== 255 && Matriz[i+1][j-1]== 0){
+            conectividad++;
+        }
+        if(Matriz[i+1][j-1]== 0 && Matriz[i+1][j]== 255){
+            conectividad++;
+        }
+        else if(Matriz[i+1][j-1]== 255 && Matriz[i+1][j]== 0){
+            conectividad++;
+        }
+        if(Matriz[i+1][j]== 0 && Matriz[i+1][j+1]== 255){
+            conectividad++;
+        }
+        else if(Matriz[i+1][j]== 255 && Matriz[i+1][j+1]== 0){
+            conectividad++;
+        }
+        if(Matriz[i+1][j+1]== 0 && Matriz[i][j+1]== 255){
+            conectividad++;
+        }
+        else if(Matriz[i+1][j+1]== 255 && Matriz[i][j+1]== 0){
+            conectividad++;
+        }
+        if(Matriz[i][j+1]== 0 && Matriz[i-1][j+1]== 255){
+            conectividad++;
+        }
+        else if(Matriz[i][j+1]== 255 && Matriz[i-1][j+1]== 0){
+            conectividad++;
+        }
+        if(Matriz[i-1][j+1]== 0 && Matriz[i-1][j]== 255){
+            conectividad++;
+        }
+        else if(Matriz[i-1][j+1]== 255 && Matriz[i-1][j]== 0){
+            conectividad++;
+        }
+        if(Matriz[i-1][j]== 0 && Matriz[i-1][j-1]== 255){
+            conectividad++;
+        }
+        else if(Matriz[i-1][j]== 255 && Matriz[i-1][j-1]== 0){
+            conectividad++;
+        }
+        return conectividad;
+    }
+    
+    public int PixelesNegros(int i, int j, int[][] Matriz){//devuelve la conectividad
+        int negros=0;
+        if(Matriz[i-1][j-1]== 0){
+            negros++;
+        }
+        if(Matriz[i][j-1]== 0){
+            negros++;
+        }
+        if(Matriz[i+1][j-1]== 0){
+            negros++;
+        }
+        if(Matriz[i+1][j]== 0){
+            negros++;
+        }
+        if(Matriz[i+1][j+1]== 0){
+            negros++;
+        }
+        if(Matriz[i][j+1]== 0){
+            negros++;
+        }
+        if(Matriz[i-1][j+1]== 0){
+            negros++;
+        }
+        if(Matriz[i-1][j]== 0){
+            negros++;
+        }
+        return negros;
+    }
+    
+    public void ZhangSuen(int i, int j, int[][] Matriz){
+        int conectividad = Conectividad(i,j,Matriz);
+        if(conectividad==1){
+            int pixelesNegros = PixelesNegros(i,j,Matriz);
+            if(pixelesNegros>=2 && pixelesNegros<7){
+                if(Matriz[i][j-1]==255 || Matriz[i+1][j]==255 || Matriz[i][j+1]==255){
+                    if(Matriz[i+1][j]==255 || Matriz[i][j+1]==255 || Matriz[i-1][j]==255){
+                        //aqui se selecciona el pixel y al final se borra, luego la condicion 2
+                    }
+                }
+            }
+        }
+    }
 
     public int CalcularMedia() throws IOException {
         BufferedImage bfImagen = Imagen;
@@ -446,11 +543,11 @@ public class Metodos {
     public void MatricesColores(){
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
-        MatrizR = new int [ancho][alto];
-        MatrizG = new int [ancho][alto];
-        MatrizB = new int [ancho][alto];
-        for (int i = 0; i < ancho; i++) {
-            for (int j = 0; j < alto; j++) {
+        MatrizR = new int [alto][ancho];
+        MatrizG = new int [alto][ancho];
+        MatrizB = new int [alto][ancho];
+        for (int i = 0; i < alto; i++) {
+            for (int j = 0; j < ancho; j++) {
                 Color c = new Color(Imagen.getRGB(i, j));
                 MatrizR[i][j] = c.getRed();
                 MatrizG[i][j] = c.getGreen();
@@ -464,9 +561,8 @@ public class Metodos {
         int ancho = imagenO.getWidth();
         int alto = imagenO.getHeight();
         BufferedImage imagenF = new BufferedImage(Imagen.getWidth(), Imagen.getHeight(), imagenO.getType());
-        Matriz = new int[ancho][alto];
-        for (int i = 0; i < ancho; i++) {
-            for (int j = 0; j < alto; j++) {
+        for (int i = 0; i < alto; i++) {
+            for (int j = 0; j < ancho; j++) {
                 Color c = new Color(imagenO.getRGB(i, j));
                 int TonoGris = (c.getRed() + c.getGreen() + c.getBlue()) / 3;
                 if (TonoGris >= 150) {
@@ -475,7 +571,6 @@ public class Metodos {
                     c = new Color(TonoGris, TonoGris, TonoGris);
                 }
                 imagenF.setRGB(i, j, c.getRGB());
-                Matriz[i][j] = TonoGris;
             }
         }
         return imagenF;
@@ -1029,6 +1124,21 @@ public class Metodos {
                 imagenF.setRGB(i - 1, j + 1, c.getRGB());
                 imagenF.setRGB(i, j + 1, c.getRGB());
                 imagenF.setRGB(i + 1, j + 1, c.getRGB());
+            }
+        }
+        return imagenF;
+    }
+    
+    public BufferedImage Esqueletizacio() throws IOException {
+        int ancho = Imagen.getWidth();
+        int alto = Imagen.getHeight();
+        MatrizBool = new boolean[ancho][alto];
+        BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
+        imagenF = ImagenGrisYMatriz();
+        for (int i = 1; i < ancho - 1; i++) {
+            for (int j = 1; j < alto - 1; j++) {
+                ZhangSuen(i, j, Matriz);
+                //Color c = new Color(pixel, pixel, pixel);
             }
         }
         return imagenF;
