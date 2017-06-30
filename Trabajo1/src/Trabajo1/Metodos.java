@@ -38,6 +38,7 @@ public class Metodos {
     public BufferedImage Imagen = null;
     public int[][] Matriz = null;
     public boolean[][] MatrizBool = null;
+    public int[][] MRotulacion;
     public int[][] MatrizR = null;
     public int[][] MatrizG = null;
     public int[][] MatrizB = null;
@@ -537,16 +538,85 @@ public class Metodos {
         for (int j = 0; j < alto; j++) {
             for (int i = 0; i < ancho; i++) {
                 if (Matriz[i][j] == 0) {
-                    cond=true;
+                    cond = true;
                     perimetro++;
                 }
             }
-            if(cond==true){
-                j=alto;
+            if (cond == true) {
+                j = alto;
             }
         }
-        perimetro=perimetro*4;
+        perimetro = perimetro * 4;
         JOptionPane.showMessageDialog(null, "Perimetro: " + perimetro);
+    }
+
+    public boolean ReconocerCirculos() throws IOException {
+        int ancho = Imagen.getWidth();
+        int alto = Imagen.getHeight();
+        Matriz = CalcularMatriz(Imagen);
+        MatrizBool = new boolean[ancho][alto];
+        MRotulacion = new int[ancho][alto];
+        for (int a = 0; a < 3; a++) {
+            for (int j = 2; j < alto - 1; j++) {
+                for (int i = 2; i < ancho - 1 ; i++) {
+                    //MatrizBool[i][j]=true;
+                    if (Matriz[i][j] == 0 && MatrizBool[i][j] == false) {
+                        MRotulacion[i][j] = a + 1;
+                        MatrizBool[i][j] = true;
+                    }
+                    if(Matriz[i][j] == 255 && Matriz[i-1][j] == 0 && MatrizBool[i][j]==false){//si el pixel es blanco y el anterior negro
+                        if(MatrizBool[i-2][j+1]==false){
+                            MatrizBool[i][j]=true;
+                            i=ancho-1;
+                        }
+                    }
+                    else if(Matriz[i][j] == 255 && Matriz[i][j-1] == 0 && MatrizBool[i][j]==false){//si el pixel es blanco y el de arriba es negro
+                        if(MatrizBool[i+1][j-1]==true){
+                            MatrizBool[i][j]=true;
+                            j=alto-1;
+                        }
+                    }
+                    if(i<ancho-1 && j<alto-1){
+                       MatrizBool[i][j]=true; 
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    public void AreaCirculo() throws IOException {
+        int ancho = Imagen.getWidth();
+        int alto = Imagen.getHeight();
+        boolean a = ReconocerCirculos();
+        int areac1 = 0;
+        int areac2 = 0;
+        int areac3 = 0;
+        for (int j = 0; j < alto; j++) {
+            for (int i = 0; i < ancho; i++) {
+                if (MRotulacion[i][j] == 1) {
+                    areac1++;
+                }
+                if (MRotulacion[i][j] == 2) {
+                    areac2++;
+                }
+                if (MRotulacion[i][j] == 3) {
+                    areac3++;
+                }
+            }
+        }
+        if(areac1 > areac2 && areac1 > areac3){
+            JOptionPane.showMessageDialog(null, "Área: " + areac1);
+        }
+        if(areac2 > areac1 && areac2 > areac3){
+            JOptionPane.showMessageDialog(null, "Área: " + areac2);
+        }
+        if(areac3 > areac1 && areac3 > areac2){
+            JOptionPane.showMessageDialog(null, "Área: " + areac3);
+        }
+        System.out.println(areac1);
+        System.out.println(areac2);
+        System.out.println(areac3);
     }
 
     public int[][] CalcularMatriz(BufferedImage Imagen) throws IOException {

@@ -1,14 +1,10 @@
 package Trabajo1;
 
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
@@ -784,16 +780,23 @@ public class Main extends JFrame{
             if(comandoAccionm.equals("Área")){
                 try {
                     metodos.AreaCuadrado();
-                } catch (IOException ex) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException exep) {
+                    exep.printStackTrace();
                 }
             }
             if(comandoAccionm.equals("Perimetro")){
                 try {
                     metodos.PerimetroCuadrado();
-                } catch (IOException ex) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException exep) {
+                    exep.printStackTrace();
                 }
+            }
+            if(comandoAccionm.equals("Área círculo mayor")){
+                try {
+                metodos.AreaCirculo();
+                } catch (IOException exep) {
+                    exep.printStackTrace();
+                }            
             }
         }
     }
