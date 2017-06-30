@@ -566,8 +566,8 @@ public class Metodos {
         int ancho = imagenO.getWidth();
         int alto = imagenO.getHeight();
         BufferedImage imagenF = new BufferedImage(Imagen.getWidth(), Imagen.getHeight(), imagenO.getType());
-        for (int i = 0; i < alto; i++) {
-            for (int j = 0; j < ancho; j++) {
+        for (int i = 0; i < ancho; i++) {
+            for (int j = 0; j < alto; j++) {
                 Color c = new Color(imagenO.getRGB(i, j));
                 int TonoGris = (c.getRed() + c.getGreen() + c.getBlue()) / 3;
                 if (TonoGris >= 150) {
