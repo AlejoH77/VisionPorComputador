@@ -47,6 +47,7 @@ public class Main extends JFrame{
     JMenu segmentacion = new JMenu("Segmentación");
     JMenu bordes = new JMenu("Detección de Bordes");
     JMenu morfologiamat = new JMenu("Morfología Matematica");
+    JMenu figuras = new JMenu("Reconocer Figuras");
     ButtonGroup bg = new ButtonGroup();
     JRadioButton tco = new JRadioButton("Trabajar con Imagen Original");//trabajar con orginial
     JRadioButton tcm = new JRadioButton("Trabajar con Imagen Modificada");//trabajar con modificada
@@ -198,6 +199,27 @@ public class Main extends JFrame{
                 JMenuItem esqueleto = new JMenuItem("Esqueletización");
                 esqueleto.addActionListener(menu);
                 morfologiamat.add(esqueleto);
+                barraMenu.add(figuras);
+                figuras.setEnabled(false);
+                JMenu cuadrado = new JMenu("Cuadrado");
+                JMenuItem areacua = new JMenuItem("Área");
+                areacua.addActionListener(menu);
+                cuadrado.add(areacua);
+                JMenuItem perimetrocua = new JMenuItem("Perimetro");
+                perimetrocua.addActionListener(menu);
+                cuadrado.add(perimetrocua);
+                figuras.add(cuadrado);
+                JMenu circulos = new JMenu("Círculos");
+                JMenuItem areacir = new JMenuItem("Área círculo mayor");
+                areacir.addActionListener(menu);
+                circulos.add(areacir);
+                JMenuItem perimetrocir = new JMenuItem("Perimetro círculo menor");
+                perimetrocir.addActionListener(menu);
+                circulos.add(perimetrocir);
+                figuras.add(circulos);
+                JMenuItem circularidad = new JMenuItem("Circularidad de los 3 Circulos");
+                circularidad.addActionListener(menu);
+                circulos.add(circularidad);
                 
                 //grupo de botones
                 tco.addActionListener(menu);
@@ -354,6 +376,7 @@ public class Main extends JFrame{
                     segmentacion.setEnabled(true);
                     bordes.setEnabled(true);
                     morfologiamat.setEnabled(true);
+                    figuras.setEnabled(true);
                     tco.setEnabled(true);
                     tcm.setEnabled(true);
                     try {
@@ -367,7 +390,7 @@ public class Main extends JFrame{
                 dispose();
             }
             if(comandoAccionm.equals("Valores >= 150 reciben media")){
-                if(media!=-1){
+                if(media>=0){
                     try {
                         bfImage=metodos.recibeMedia(media);
                         BfImagenF=bfImage;
@@ -384,7 +407,7 @@ public class Main extends JFrame{
                 }
             }
             if(comandoAccionm.equals("Valores >= 150 reciben mediana")){
-                if(mediana>0){
+                if(mediana>=0){
                     try {
                         bfImage=metodos.recibeMediana(mediana);
                         BfImagenF=bfImage;
@@ -399,7 +422,7 @@ public class Main extends JFrame{
                 }
             }
             if(comandoAccionm.equals("Valores >= 150 reciben moda")){
-                if(moda>0){
+                if(moda>=0){
                     try{
                         bfImage=metodos.recibeModa(moda);
                         BfImagenF=bfImage;
@@ -415,7 +438,7 @@ public class Main extends JFrame{
                 }
             }
             if(comandoAccionm.equals("Valores >= media reciben blanco")){
-                if(media!=-1){
+                if(media>=0){
                     try {
                         bfImage=metodos.recibeMediaBlanco(media);
                         BfImagenF=bfImage;
@@ -432,7 +455,7 @@ public class Main extends JFrame{
                 }
             }
             if(comandoAccionm.equals("< mediana negro, > media blanco")){
-                if(mediana>0){
+                if(mediana>=0){
                     try{
                        bfImage=metodos.recibeMedianayMedia(mediana,media);
                        BfImagenF=bfImage;
@@ -757,6 +780,20 @@ public class Main extends JFrame{
                 ImageIcon ico = new ImageIcon(bfImage);
                 modificado = new JLabel(ico);
                 imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Área")){
+                try {
+                    metodos.AreaCuadrado();
+                } catch (IOException ex) {
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if(comandoAccionm.equals("Perimetro")){
+                try {
+                    metodos.PerimetroCuadrado();
+                } catch (IOException ex) {
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }
