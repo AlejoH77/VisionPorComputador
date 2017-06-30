@@ -749,7 +749,7 @@ public class Main extends JFrame{
             }
             if(comandoAccionm.equals("Esqueletización")){
                 try{
-                   bfImage=metodos.Esqueletizacio();
+                   bfImage=metodos.Esqueletizacion();
                    BfImagenF=bfImage;
                 }catch (IOException exep){
                     exep.printStackTrace();

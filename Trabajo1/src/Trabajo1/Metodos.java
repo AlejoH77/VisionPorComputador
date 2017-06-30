@@ -339,52 +339,28 @@ public class Metodos {
     
     public int Conectividad(int i, int j, int[][] Matriz){//devuelve la conectividad
         int conectividad=0;
-        if(Matriz[i-1][j-1]== 0 && Matriz[i][j-1]== 255){
+        if(Matriz[i-1][j-1]== 255 && Matriz[i][j-1]== 0){
             conectividad++;
         }
-        else if(Matriz[i-1][j-1]== 255 && Matriz[i][j-1]== 0){
+        if(Matriz[i][j-1]== 255 && Matriz[i+1][j-1]== 0){
             conectividad++;
         }
-        if(Matriz[i][j-1]== 0 && Matriz[i+1][j-1]== 255){
+        if(Matriz[i+1][j-1]== 255 && Matriz[i+1][j]== 0){
             conectividad++;
         }
-        else if(Matriz[i][j-1]== 255 && Matriz[i+1][j-1]== 0){
+        if(Matriz[i+1][j]== 255 && Matriz[i+1][j+1]== 0){
             conectividad++;
         }
-        if(Matriz[i+1][j-1]== 0 && Matriz[i+1][j]== 255){
+        if(Matriz[i+1][j+1]== 255 && Matriz[i][j+1]== 0){
             conectividad++;
         }
-        else if(Matriz[i+1][j-1]== 255 && Matriz[i+1][j]== 0){
+        if(Matriz[i][j+1]== 255 && Matriz[i-1][j+1]== 0){
             conectividad++;
         }
-        if(Matriz[i+1][j]== 0 && Matriz[i+1][j+1]== 255){
+        if(Matriz[i-1][j+1]== 255 && Matriz[i-1][j]== 0){
             conectividad++;
         }
-        else if(Matriz[i+1][j]== 255 && Matriz[i+1][j+1]== 0){
-            conectividad++;
-        }
-        if(Matriz[i+1][j+1]== 0 && Matriz[i][j+1]== 255){
-            conectividad++;
-        }
-        else if(Matriz[i+1][j+1]== 255 && Matriz[i][j+1]== 0){
-            conectividad++;
-        }
-        if(Matriz[i][j+1]== 0 && Matriz[i-1][j+1]== 255){
-            conectividad++;
-        }
-        else if(Matriz[i][j+1]== 255 && Matriz[i-1][j+1]== 0){
-            conectividad++;
-        }
-        if(Matriz[i-1][j+1]== 0 && Matriz[i-1][j]== 255){
-            conectividad++;
-        }
-        else if(Matriz[i-1][j+1]== 255 && Matriz[i-1][j]== 0){
-            conectividad++;
-        }
-        if(Matriz[i-1][j]== 0 && Matriz[i-1][j-1]== 255){
-            conectividad++;
-        }
-        else if(Matriz[i-1][j]== 255 && Matriz[i-1][j-1]== 0){
+        if(Matriz[i-1][j]== 255 && Matriz[i-1][j-1]== 0){
             conectividad++;
         }
         return conectividad;
@@ -419,14 +395,28 @@ public class Metodos {
         return negros;
     }
     
-    public void ZhangSuen(int i, int j, int[][] Matriz){
+    public void ZhangSuenP1(int i, int j, int[][] Matriz){
         int conectividad = Conectividad(i,j,Matriz);
         if(conectividad==1){
             int pixelesNegros = PixelesNegros(i,j,Matriz);
             if(pixelesNegros>=2 && pixelesNegros<7){
                 if(Matriz[i][j-1]==255 || Matriz[i+1][j]==255 || Matriz[i][j+1]==255){
                     if(Matriz[i+1][j]==255 || Matriz[i][j+1]==255 || Matriz[i-1][j]==255){
-                        //aqui se selecciona el pixel y al final se borra, luego la condicion 2
+                        MatrizBool[i][j]=true;
+                    }
+                }
+            }
+        }
+    }
+    
+    public void ZhangSuenP2(int i, int j, int[][] Matriz){
+        int conectividad = Conectividad(i,j,Matriz);
+        if(conectividad==1){
+            int pixelesNegros = PixelesNegros(i,j,Matriz);
+            if(pixelesNegros>=2 && pixelesNegros<7){
+                if(Matriz[i-1][j]==255 || Matriz[i][j-1]==255 || Matriz[i+1][j]==255){
+                    if(Matriz[i-1][j]==255 || Matriz[i][j-1]==255 || Matriz[i][j+1]==255){
+                        MatrizBool[i][j]=true;
                     }
                 }
             }
@@ -521,6 +511,21 @@ public class Metodos {
         varianza = totalMatriz / (ancho * alto);
         JOptionPane.showMessageDialog(null, "Varianza: " + varianza);
         return varianza;
+    }
+    
+    public int[][] CalcularMatriz(BufferedImage Imagen) throws IOException {
+        int ancho = Imagen.getWidth();
+        int alto = Imagen.getHeight();
+        int[][] Matriz = new int[ancho][alto];
+        for (int i = 0; i < ancho; i++) {
+            for (int j = 0; j < alto; j++) {
+                Color c = new Color(Imagen.getRGB(i, j));
+                int TonoGris = (c.getRed() + c.getGreen() + c.getBlue()) / 3;
+                c = new Color(TonoGris, TonoGris, TonoGris);
+                Matriz[i][j] = TonoGris;
+            }
+        }
+        return Matriz;
     }
 
     public BufferedImage ImagenGrisYMatriz() throws IOException {
@@ -1129,18 +1134,44 @@ public class Metodos {
         return imagenF;
     }
     
-    public BufferedImage Esqueletizacio() throws IOException {
+    public BufferedImage Esqueletizacion() throws IOException {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         MatrizBool = new boolean[ancho][alto];
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
         imagenF = ImagenGrisYMatriz();
-        for (int i = 1; i < ancho - 1; i++) {
-            for (int j = 1; j < alto - 1; j++) {
-                ZhangSuen(i, j, Matriz);
-                //Color c = new Color(pixel, pixel, pixel);
+        Color c = new Color(255, 255, 255);
+        //for(int h=0;h<20;h++){
+            //Matriz=CalcularMatriz(imagenF);
+            for (int i = 1; i < ancho - 1; i++) {
+                for (int j = 1; j < alto - 1; j++) {
+                    ZhangSuenP1(i, j, Matriz);
+                }
+            }      
+            for (int i = 0; i < ancho ; i++) {
+                for (int j = 0; j < alto ; j++) {
+                    if(MatrizBool[i][j]==true){
+                        imagenF.setRGB(i, j, c.getRGB());
+                        MatrizBool[i][j]=false;
+                    }
+                }
             }
-        }
+            //segunda condicion
+            Matriz=CalcularMatriz(imagenF);
+            for (int i = 1; i < ancho - 1; i++) {
+                for (int j = 1; j < alto - 1; j++) {
+                    ZhangSuenP2(i, j, Matriz);
+                }
+            }
+            for (int i = 0; i < ancho ; i++) {
+                for (int j = 0; j < alto ; j++) {
+                    if(MatrizBool[i][j]==true){
+                        imagenF.setRGB(i, j, c.getRGB());
+                        //MatrizBool[i][j]=false;
+                    }
+                }
+            }
+        //}
         return imagenF;
     }
 
