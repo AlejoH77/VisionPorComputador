@@ -708,7 +708,7 @@ public class Metodos {
         return Matriz;
     }
 
-    public BufferedImage ImagenGrisYMatriz() throws IOException {
+    public BufferedImage ImagenGris() throws IOException {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(Imagen.getWidth(), Imagen.getHeight(), Imagen.getType());
@@ -1107,7 +1107,7 @@ public class Metodos {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
-        imagenF = ImagenGrisYMatriz();
+        imagenF = ImagenGris();
         for (int i = 1; i < ancho - 1; i++) {
             for (int j = 1; j < alto - 1; j++) {
                 int TonoGris = OFiltroProm(i, j, 1);
@@ -1123,7 +1123,7 @@ public class Metodos {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
-        imagenF = ImagenGrisYMatriz();
+        imagenF = ImagenGris();
         for (int i = 1; i < ancho - 1; i++) {
             for (int j = 1; j < alto - 1; j++) {
                 int TonoGris = OFiltroMediana(i, j);
@@ -1138,7 +1138,7 @@ public class Metodos {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
-        imagenF = ImagenGrisYMatriz();
+        imagenF = ImagenGris();
         for (int i = 1; i < ancho - 1; i++) {
             for (int j = 1; j < alto - 1; j++) {
                 int TonoGris = OFiltroModa(i, j);
@@ -1154,7 +1154,7 @@ public class Metodos {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
-        imagenF = ImagenGrisYMatriz();
+        imagenF = ImagenGris();
         for (int i = 1; i < ancho - 1; i++) {
             for (int j = 1; j < alto - 1; j++) {
                 int TonoGris = OFiltroGauss(i, j);
@@ -1170,7 +1170,8 @@ public class Metodos {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
-        imagenF = ImagenGrisYMatriz();
+        imagenF = ImagenGris();
+        Matriz = CalcularMatriz(imagenF);
         for (int i = 0; i < ancho; i++) {
             for (int j = 0; j < alto; j++) {
                 int TonoGris = Matriz[i][j];
@@ -1190,7 +1191,8 @@ public class Metodos {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
-        imagenF = ImagenGrisYMatriz();
+        imagenF = ImagenGris();
+        Matriz = CalcularMatriz(imagenF);
         MatricesRoberts();
         for (int i = 1; i < ancho - 1; i++) {
             for (int j = 1; j < alto - 1; j++) {
@@ -1212,7 +1214,8 @@ public class Metodos {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
-        imagenF = ImagenGrisYMatriz();
+        imagenF = ImagenGris();
+        Matriz = CalcularMatriz(imagenF);
         MatricesSobel();
         for (int i = 1; i < ancho - 1; i++) {
             for (int j = 1; j < alto - 1; j++) {
@@ -1234,7 +1237,8 @@ public class Metodos {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
-        imagenF = ImagenGrisYMatriz();
+        imagenF = ImagenGris();
+        Matriz = CalcularMatriz(imagenF);
         for (int i = 1; i < ancho - 1; i++) {
             for (int j = 1; j < alto - 1; j++) {
                 int Gradiente = OKirsch(i, j);
@@ -1253,7 +1257,8 @@ public class Metodos {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
-        imagenF = ImagenGrisYMatriz();
+        imagenF = ImagenGris();
+        Matriz = CalcularMatriz(imagenF);
         for (int i = 1; i < ancho - 1; i++) {
             for (int j = 1; j < alto - 1; j++) {
                 int Gradiente = ORobinson(i, j);
@@ -1272,7 +1277,8 @@ public class Metodos {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
-        imagenF = ImagenGrisYMatriz();
+        imagenF = ImagenGris();
+        Matriz = CalcularMatriz(imagenF);
         for (int i = 1; i < ancho - 1; i++) {
             for (int j = 1; j < alto - 1; j++) {
                 int pixel = ODilatacion(i, j, Matriz);
@@ -1295,7 +1301,8 @@ public class Metodos {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
-        imagenF = ImagenGrisYMatriz();
+        imagenF = ImagenGris();
+        Matriz = CalcularMatriz(imagenF);
         for (int i = 1; i < ancho - 1; i++) {
             for (int j = 1; j < alto - 1; j++) {
                 int pixel = OErosion(i, j, Matriz);
@@ -1319,7 +1326,7 @@ public class Metodos {
         int alto = Imagen.getHeight();
         MatrizBool = new boolean[ancho][alto];
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
-        imagenF = ImagenGrisYMatriz();
+        imagenF = ImagenGris();
         Color c = new Color(255, 255, 255);
         Matriz = CalcularMatriz(imagenF);
         for (int i = 1; i < ancho - 1; i++) {
