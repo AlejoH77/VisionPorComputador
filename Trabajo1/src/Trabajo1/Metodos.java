@@ -550,45 +550,84 @@ public class Metodos {
         JOptionPane.showMessageDialog(null, "Perimetro: " + perimetro);
     }
 
-    public boolean ReconocerCirculos() throws IOException {
+    public void EncontrarFiguras() throws IOException {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
+        int conta = 1;
         Matriz = CalcularMatriz(Imagen);
-        MatrizBool = new boolean[ancho][alto];
-        MRotulacion = new int[ancho][alto];
-        for (int a = 0; a < 3; a++) {
-            for (int j = 2; j < alto - 1; j++) {
-                for (int i = 2; i < ancho - 1 ; i++) {
-                    //MatrizBool[i][j]=true;
-                    if (Matriz[i][j] == 0 && MatrizBool[i][j] == false) {
-                        MRotulacion[i][j] = a + 1;
+        for (int j = 1; j < alto - 1; j++) {
+            for (int i = 1; i < ancho - 1; i++) {
+                if (Matriz[i][j] == 0 && MatrizBool[i][j] == false) {
+                    if (MRotulacion[i - 1][j - 1] == 0 && MRotulacion[i][j - 1] == 0 && MRotulacion[i + 1][j - 1] == 0 && MRotulacion[i - 1][j] == 0 && MRotulacion[i + 1][j] == 0 && MRotulacion[i - 1][j + 1] == 0 && MRotulacion[i][j + 1] == 0 && MRotulacion[i + 1][j + 1] == 0) {
+                        MRotulacion[i][j] = conta;
                         MatrizBool[i][j] = true;
-                    }
-                    if(Matriz[i][j] == 255 && Matriz[i-1][j] == 0 && MatrizBool[i][j]==false){//si el pixel es blanco y el anterior negro
-                        if(MatrizBool[i-2][j+1]==false){
-                            MatrizBool[i][j]=true;
-                            i=ancho-1;
+                        Rotular(i,j,conta);
+                        int aux=i;
+                        conta++;
+                    }else {
+                        if (MRotulacion[i - 1][j - 1] != 0) {
+                            MRotulacion[i][j] = MRotulacion[i - 1][j - 1];
+                        } else if (MRotulacion[i][j - 1] != 0) {
+                            MRotulacion[i][j] = MRotulacion[i][j - 1];
+                        } else if (MRotulacion[i + 1][j - 1] != 0) {
+                            MRotulacion[i][j] = MRotulacion[i + 1][j - 1];
+                        } else if(MRotulacion[i - 1][j]!=0){
+                            MRotulacion[i][j] = MRotulacion[i - 1][j];
+                        }else if(MRotulacion[i + 1][j]!=0){
+                            MRotulacion[i][j] = MRotulacion[i - 1][j];
+                        }else if(MRotulacion[i - 1][j + 1]!=0){
+                            MRotulacion[i][j] = MRotulacion[i - 1][j + 1];
+                        }else if(MRotulacion[i][j + 1]!=0){
+                            MRotulacion[i][j] = MRotulacion[i][j + 1];
+                        }else if(MRotulacion[i + 1][j + 1]!=0){
+                            MRotulacion[i][j] = MRotulacion[i + 1][j + 1];
                         }
-                    }
-                    else if(Matriz[i][j] == 255 && Matriz[i][j-1] == 0 && MatrizBool[i][j]==false){//si el pixel es blanco y el de arriba es negro
-                        if(MatrizBool[i+1][j-1]==true){
-                            MatrizBool[i][j]=true;
-                            j=alto-1;
-                        }
-                    }
-                    if(i<ancho-1 && j<alto-1){
-                       MatrizBool[i][j]=true; 
                     }
                 }
             }
         }
-        return true;
+        System.out.println(conta);
+        System.out.println("");
+        for (int j = 1; j < alto - 1; j++) {
+            for (int i = 1; i < ancho - 1; i++) {
+                System.out.print(MRotulacion[i][j]+" ");
+            }
+            System.out.println("");
+        }
+        System.out.println("");
+    }
+    
+    public void Rotular(int i, int j, int conta){
+        int abajo=j+1;
+        int derecha=i+1;
+        int izquierda=i-1;
+        while(izquierda>1 && Matriz[izquierda][j]==0 && MatrizBool[izquierda][j]==false){
+            MRotulacion[izquierda][j]=conta;
+            MatrizBool[izquierda][j]=true;
+            izquierda--;
+        }
+        while(derecha<Imagen.getWidth() && Matriz[derecha][j]==0 && MatrizBool[derecha][j]==false){
+            MRotulacion[derecha][j]=conta;
+            MatrizBool[derecha][j]=true;
+            derecha++;
+        }
+        if(abajo<Imagen.getHeight()-1 && i<Imagen.getWidth()-1){
+            System.out.println("entro");
+            if(Matriz[i][abajo]==0){
+                System.out.println("entro2");
+                MRotulacion[i][abajo]=conta;
+                MatrizBool[i][abajo]=true;
+                Rotular(i,abajo,conta);
+            }
+        }       
     }
 
     public void AreaCirculo() throws IOException {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
-        boolean a = ReconocerCirculos();
+        MatrizBool = new boolean[ancho][alto];
+        MRotulacion = new int[ancho][alto];
+        EncontrarFiguras();
         int areac1 = 0;
         int areac2 = 0;
         int areac3 = 0;
@@ -605,13 +644,13 @@ public class Metodos {
                 }
             }
         }
-        if(areac1 > areac2 && areac1 > areac3){
+        if (areac1 > areac2 && areac1 > areac3) {
             JOptionPane.showMessageDialog(null, "Área: " + areac1);
         }
-        if(areac2 > areac1 && areac2 > areac3){
+        if (areac2 > areac1 && areac2 > areac3) {
             JOptionPane.showMessageDialog(null, "Área: " + areac2);
         }
-        if(areac3 > areac1 && areac3 > areac2){
+        if (areac3 > areac1 && areac3 > areac2) {
             JOptionPane.showMessageDialog(null, "Área: " + areac3);
         }
         System.out.println(areac1);
