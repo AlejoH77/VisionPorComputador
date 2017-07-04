@@ -612,9 +612,7 @@ public class Metodos {
             derecha++;
         }
         if(abajo<Imagen.getHeight()-1 && i<Imagen.getWidth()-1){
-            System.out.println("entro");
             if(Matriz[i][abajo]==0){
-                System.out.println("entro2");
                 MRotulacion[i][abajo]=conta;
                 MatrizBool[i][abajo]=true;
                 Rotular(i,abajo,conta);
