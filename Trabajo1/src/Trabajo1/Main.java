@@ -44,6 +44,7 @@ public class Main extends JFrame{
     JMenu bordes = new JMenu("Detección de Bordes");
     JMenu morfologiamat = new JMenu("Morfología Matematica");
     JMenu figuras = new JMenu("Reconocer Figuras");
+    JMenu proyecto = new JMenu("Proyecto");
     ButtonGroup bg = new ButtonGroup();
     JRadioButton tco = new JRadioButton("Trabajar con Imagen Original");//trabajar con orginial
     JRadioButton tcm = new JRadioButton("Trabajar con Imagen Modificada");//trabajar con modificada
@@ -216,6 +217,12 @@ public class Main extends JFrame{
                 JMenuItem circularidad = new JMenuItem("Circularidad de los 3 Circulos");
                 circularidad.addActionListener(menu);
                 circulos.add(circularidad);
+                barraMenu.add(proyecto);
+                proyecto.setEnabled(false);
+                JMenuItem placa = new JMenuItem("Placas");
+                placa.addActionListener(menu);
+                proyecto.add(placa);
+                
                 
                 //grupo de botones
                 tco.addActionListener(menu);
@@ -373,6 +380,7 @@ public class Main extends JFrame{
                     bordes.setEnabled(true);
                     morfologiamat.setEnabled(true);
                     figuras.setEnabled(true);
+                    proyecto.setEnabled(true);
                     tco.setEnabled(true);
                     tcm.setEnabled(true);
                     try {
@@ -591,7 +599,7 @@ public class Main extends JFrame{
                 imgFinal.setViewportView(modificado);
             }
             if(comandoAccionm.equals("Brillo")){
-                int brillo = Integer.parseInt(JOptionPane.showInputDialog(null,"Introduzca el brillo","Brillo",JOptionPane.QUESTION_MESSAGE));
+                float brillo = Float.parseFloat(JOptionPane.showInputDialog(null,"Introduzca el brillo","Brillo",JOptionPane.QUESTION_MESSAGE));
                 try{
                    bfImage=metodos.Brillo(brillo);
                    BfImagenF=bfImage;
@@ -603,7 +611,7 @@ public class Main extends JFrame{
                 imgFinal.setViewportView(modificado);
             }
             if(comandoAccionm.equals("Contraste")){
-                int contraste = Integer.parseInt(JOptionPane.showInputDialog(null,"Introduzca el brillo","Brillo",JOptionPane.QUESTION_MESSAGE));
+                float contraste = Float.parseFloat(JOptionPane.showInputDialog(null,"Introduzca el brillo","Brillo",JOptionPane.QUESTION_MESSAGE));
                 try{
                    bfImage=metodos.Contraste(contraste);
                    BfImagenF=bfImage;
@@ -804,6 +812,17 @@ public class Main extends JFrame{
                 } catch (IOException exep) {
                     exep.printStackTrace();
                 }            
+            }
+            if(comandoAccionm.equals("Placas")){
+                try {
+                bfImage=metodos.Placas();
+                BfImagenF=bfImage;
+                } catch (IOException exep) {
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
             }
         }
     }

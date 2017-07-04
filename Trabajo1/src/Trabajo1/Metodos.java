@@ -728,11 +728,11 @@ public class Metodos {
     public void MatricesColores() {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
-        MatrizR = new int[alto][ancho];
-        MatrizG = new int[alto][ancho];
-        MatrizB = new int[alto][ancho];
-        for (int i = 0; i < alto; i++) {
-            for (int j = 0; j < ancho; j++) {
+        MatrizR = new int[ancho][alto];
+        MatrizG = new int[ancho][alto];
+        MatrizB = new int[ancho][alto];
+        for (int i = 0; i < ancho; i++) {
+            for (int j = 0; j < alto; j++) {
                 Color c = new Color(Imagen.getRGB(i, j));
                 MatrizR[i][j] = c.getRed();
                 MatrizG[i][j] = c.getGreen();
@@ -1055,7 +1055,7 @@ public class Metodos {
         return imagenF;
     }
 
-    public BufferedImage Brillo(int brillo) throws IOException {
+    public BufferedImage Brillo(float brillo) throws IOException {
         BufferedImage imagenO = Imagen;
         int ancho = imagenO.getWidth();
         int alto = imagenO.getHeight();
@@ -1063,9 +1063,9 @@ public class Metodos {
         for (int i = 0; i < ancho; i++) {
             for (int j = 0; j < alto; j++) {
                 Color c = new Color(imagenO.getRGB(i, j));
-                int rojo = c.getRed() + brillo;
-                int verde = c.getGreen() + brillo;
-                int azul = c.getBlue() + brillo;
+                int rojo = (int) (c.getRed() + brillo);
+                int verde = (int) (c.getGreen() + brillo);
+                int azul = (int) (c.getBlue() + brillo);
                 rojo = (rojo > 255) ? 255 : rojo;
                 rojo = (rojo < 0) ? 0 : rojo;
                 verde = (verde > 255) ? 255 : verde;
@@ -1079,7 +1079,7 @@ public class Metodos {
         return imagenF;
     }
 
-    public BufferedImage Contraste(int contraste) throws IOException {
+    public BufferedImage Contraste(float contraste) throws IOException {
         BufferedImage imagenO = Imagen;
         int ancho = imagenO.getWidth();
         int alto = imagenO.getHeight();
@@ -1087,9 +1087,9 @@ public class Metodos {
         for (int i = 0; i < ancho; i++) {
             for (int j = 0; j < alto; j++) {
                 Color c = new Color(imagenO.getRGB(i, j));
-                int rojo = c.getRed() * contraste;
-                int verde = c.getGreen() * contraste;
-                int azul = c.getBlue() * contraste;
+                int rojo = (int) (c.getRed() * contraste);
+                int verde = (int) (c.getGreen() * contraste);
+                int azul = (int) (c.getBlue() * contraste);
                 rojo = (rojo > 255) ? 255 : rojo;
                 rojo = (rojo < 0) ? 0 : rojo;
                 verde = (verde > 255) ? 255 : verde;
@@ -1376,6 +1376,26 @@ public class Metodos {
         }
         Histograma hist = new Histograma();
         hist.GenerarHistograma(imagenF, Matriz);
+    }
+    
+    public BufferedImage Placas() throws IOException{
+        int ancho = Imagen.getWidth();
+        int alto = Imagen.getHeight();
+        BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
+        MatricesColores();
+        Color cb = new Color(255,255,255);
+        Color cn = new Color(0,0,0);
+        for (int i = 0; i < ancho; i++) {
+            for (int j = 0; j < alto; j++) {
+                if(MatrizR[i][j]<=240 && MatrizR[i][j]>=170 && MatrizG[i][j]<=200 && MatrizG[i][j]>=130 && MatrizB[i][j]<=75 && MatrizB[i][j]>=5){
+                    imagenF.setRGB(i, j, cb.getRGB());
+                }
+                else{
+                    imagenF.setRGB(i, j, cn.getRGB());
+                }
+            }
+        }
+        return imagenF;
     }
 
 }
