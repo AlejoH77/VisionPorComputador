@@ -586,7 +586,7 @@ public class Metodos {
                 }
             }
         }
-        System.out.println(conta);
+        /*System.out.println(conta);
         System.out.println("");
         for (int j = 1; j < alto - 1; j++) {
             for (int i = 1; i < ancho - 1; i++) {
@@ -594,7 +594,7 @@ public class Metodos {
             }
             System.out.println("");
         }
-        System.out.println("");
+        System.out.println("");*/
     }
     
     public void Rotular(int i, int j, int conta){
@@ -653,10 +653,47 @@ public class Metodos {
         if (areac3 > areac1 && areac3 > areac2) {
             JOptionPane.showMessageDialog(null, "Área: " + areac3);
         }
-        System.out.println(areac1);
-        System.out.println(areac2);
-        System.out.println(areac3);
     }
+    
+    public void PerimetroCirculo() throws IOException{
+        int ancho = Imagen.getWidth();
+        int alto = Imagen.getHeight();
+        MatrizBool = new boolean[ancho][alto];
+        MRotulacion = new int[ancho][alto];
+        EncontrarFiguras();
+        double radio;
+        double perimetro;
+        int areac = 0;
+        int areac1 = 0;
+        int areac2 = 0;
+        int areac3 = 0;
+        for (int j = 0; j < alto; j++) {
+            for (int i = 0; i < ancho; i++) {
+                if (MRotulacion[i][j] == 1) {
+                    areac1++;
+                }
+                if (MRotulacion[i][j] == 2) {
+                    areac2++;
+                }
+                if (MRotulacion[i][j] == 3) {
+                    areac3++;
+                }
+            }
+        }
+        if (areac1 > areac2 && areac1 > areac3) {
+            areac=areac1;
+        }
+        if (areac2 > areac1 && areac2 > areac3) {
+            areac=areac2;
+        }
+        if (areac3 > areac1 && areac3 > areac2) {
+            areac=areac3;
+        }
+        radio=areac/Math.PI; // sabiendo que area= pi * (r*r)
+        radio=Math.sqrt(radio);
+        perimetro= 2 * Math.PI * radio;
+        JOptionPane.showMessageDialog(null, "Perimetro círculo Pequeño: " + perimetro);
+    } 
 
     public int[][] CalcularMatriz(BufferedImage Imagen) throws IOException {
         int ancho = Imagen.getWidth();

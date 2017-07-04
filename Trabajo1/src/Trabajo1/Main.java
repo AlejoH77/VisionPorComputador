@@ -798,6 +798,13 @@ public class Main extends JFrame{
                     exep.printStackTrace();
                 }            
             }
+            if(comandoAccionm.equals("Perimetro círculo menor")){
+                try {
+                metodos.PerimetroCirculo();
+                } catch (IOException exep) {
+                    exep.printStackTrace();
+                }            
+            }
         }
     }
     
