@@ -28,7 +28,6 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.statistics.HistogramDataset;
 
-
 public class Metodos {
 
     public BufferedImage Imagen = null;
@@ -44,6 +43,10 @@ public class Metodos {
     public int[][] Filtro = null;
     public int[][] xKernel = new int[3][3];
     public int[][] yKernel = new int[3][3];
+    public int mayori;
+    public int menori;
+    public int mayorj;
+    public int menorj;
     public int a = 0;
     //Mascaras Kirsch
     public int[][] Mascara1K = {{5, -3, -3}, {5, 0, -3}, {5, -3, -3}};
@@ -557,19 +560,19 @@ public class Metodos {
         for (int j = 1; j < alto - 1; j++) {
             for (int i = 1; i < ancho - 1; i++) {
                 if (Matriz[i][j] == 255 && MatrizBool[i][j] == false) {
-                    RotularRec(i,j,conta);
+                    RotularRec(i, j, conta);
                     conta++;
                 }
             }
         }
         ArregloObjetos = new int[conta];
         int nobjeto;
-        for (int j = 0; j < alto ; j++) {
-            for (int i = 0; i < ancho ; i++) {
-                nobjeto=MRotulacion[i][j]-1;
-                if(nobjeto>=0){
-                   ArregloObjetos[nobjeto]++; 
-                }             
+        for (int j = 0; j < alto; j++) {
+            for (int i = 0; i < ancho; i++) {
+                nobjeto = MRotulacion[i][j] - 1;
+                if (nobjeto >= 0) {
+                    ArregloObjetos[nobjeto]++;
+                }
             }
         }
         /*System.out.println(conta);
@@ -582,21 +585,21 @@ public class Metodos {
         }
         System.out.println("");*/
     }
-    
-    public void RotularRec(int i, int j, int conta){
-        MatrizBool[i][j]=true;
-        MRotulacion[i][j]=conta;
-        if(j-1>0 && Matriz[i][j-1]==255 && MatrizBool[i][j-1]==false){
-            RotularRec(i,j-1,conta);
+
+    public void RotularRec(int i, int j, int conta) {
+        MatrizBool[i][j] = true;
+        MRotulacion[i][j] = conta;
+        if (j - 1 > 0 && Matriz[i][j - 1] == 255 && MatrizBool[i][j - 1] == false) {
+            RotularRec(i, j - 1, conta);
         }
-        if(j+1<Imagen.getHeight() && Matriz[i][j+1]==255 && MatrizBool[i][j+1]==false){
-            RotularRec(i,j+1,conta);
+        if (j + 1 < Imagen.getHeight() && Matriz[i][j + 1] == 255 && MatrizBool[i][j + 1] == false) {
+            RotularRec(i, j + 1, conta);
         }
-        if(i-1> 0 && Matriz[i-1][j]==255 && MatrizBool[i-1][j]==false){
-            RotularRec(i-1,j,conta);
+        if (i - 1 > 0 && Matriz[i - 1][j] == 255 && MatrizBool[i - 1][j] == false) {
+            RotularRec(i - 1, j, conta);
         }
-        if(i+1<Imagen.getWidth() && Matriz[i+1][j]==255 && MatrizBool[i+1][j]==false){
-            RotularRec(i+1,j,conta);
+        if (i + 1 < Imagen.getWidth() && Matriz[i + 1][j] == 255 && MatrizBool[i + 1][j] == false) {
+            RotularRec(i + 1, j, conta);
         }
     }
 
@@ -630,8 +633,8 @@ public class Metodos {
             JOptionPane.showMessageDialog(null, "Área: " + areac3);
         }
     }
-    
-    public void PerimetroCirculo() throws IOException{
+
+    public void PerimetroCirculo() throws IOException {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         MatrizBool = new boolean[ancho][alto];
@@ -657,19 +660,19 @@ public class Metodos {
             }
         }
         if (areac1 > areac2 && areac1 > areac3) {
-            areac=areac1;
+            areac = areac1;
         }
         if (areac2 > areac1 && areac2 > areac3) {
-            areac=areac2;
+            areac = areac2;
         }
         if (areac3 > areac1 && areac3 > areac2) {
-            areac=areac3;
+            areac = areac3;
         }
-        radio=areac/Math.PI; // sabiendo que area= pi * (r*r)
-        radio=Math.sqrt(radio);
-        perimetro= 2 * Math.PI * radio;
+        radio = areac / Math.PI; // sabiendo que area= pi * (r*r)
+        radio = Math.sqrt(radio);
+        perimetro = 2 * Math.PI * radio;
         JOptionPane.showMessageDialog(null, "Perimetro círculo Pequeño: " + perimetro);
-    } 
+    }
 
     public int[][] CalcularMatriz(BufferedImage Imagen) throws IOException {
         int ancho = Imagen.getWidth();
@@ -1355,29 +1358,28 @@ public class Metodos {
         Histograma hist = new Histograma();
         hist.GenerarHistograma(imagenF, Matriz);
     }
-    
-    public BufferedImage Placas() throws IOException{
+
+    public BufferedImage Placas() throws IOException {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
         imagenF = RGBtoYIQ(Imagen);
         MatricesColores(imagenF);
-        Color cb = new Color(255,255,255);
-        Color cn = new Color(0,0,0);
+        Color cb = new Color(255, 255, 255);
+        Color cn = new Color(0, 0, 0);
         for (int i = 0; i < ancho; i++) {
             for (int j = 0; j < alto; j++) {
-                if(MatrizR[i][j]<=170 && MatrizR[i][j]>=110 && MatrizG[i][j]<=105 && MatrizG[i][j]>=45 && MatrizB[i][j]<=40 && MatrizB[i][j]>=0){
+                if (MatrizR[i][j] <= 170 && MatrizR[i][j] >= 110 && MatrizG[i][j] <= 105 && MatrizG[i][j] >= 45 && MatrizB[i][j] <= 40 && MatrizB[i][j] >= 0) {
                     imagenF.setRGB(i, j, cb.getRGB());
-                }
-                else{
+                } else {
                     imagenF.setRGB(i, j, cn.getRGB());
                 }
             }
         }
         return imagenF;
     }
-    
-    public BufferedImage RGBtoYIQ(BufferedImage Imagen) throws IOException{
+
+    public BufferedImage RGBtoYIQ(BufferedImage Imagen) throws IOException {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
@@ -1388,42 +1390,56 @@ public class Metodos {
                 int rojo = MatrizR[i][j];
                 int verde = MatrizG[i][j];
                 int azul = MatrizB[i][j];
-                int Y = (int) (0.299*rojo+0.587*verde+0.114*azul);
-                int I = (int) (0.596*rojo-0.274*verde-0.322*azul);
-                int Q = (int) (0.211*rojo-0.523*verde+0.312*azul);
+                int Y = (int) (0.299 * rojo + 0.587 * verde + 0.114 * azul);
+                int I = (int) (0.596 * rojo - 0.274 * verde - 0.322 * azul);
+                int Q = (int) (0.211 * rojo - 0.523 * verde + 0.312 * azul);
                 Y = (Y > 255) ? 255 : Y;
                 Y = (Y < 0) ? 0 : Y;
                 I = (I > 255) ? 255 : I;
                 I = (I < 0) ? 0 : I;
                 Q = (Q > 255) ? 255 : Q;
                 Q = (Q < 0) ? 0 : Q;
-                c = new Color(Y,I,Q);
+                c = new Color(Y, I, Q);
                 imagenF.setRGB(i, j, c.getRGB());
             }
         }
         return imagenF;
     }
-    
-    public BufferedImage Pintar() throws IOException{
+
+    public BufferedImage Pintar() throws IOException {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
         EncontrarFiguras();
-        int objetoM=0;
-        for(int cvec = 0; cvec < ArregloObjetos.length; cvec++){
-            if(ArregloObjetos[cvec]>objetoM){
-                objetoM=cvec;
+        int objetoM = 0;
+        for (int cvec = 0; cvec < ArregloObjetos.length; cvec++) {
+            if (ArregloObjetos[cvec] > objetoM) {
+                objetoM = cvec;
             }
         }
         Color c;
         for (int i = 0; i < ancho; i++) {
             for (int j = 0; j < alto; j++) {
-                if(MRotulacion[i][j]==objetoM+1){
-                    c = new Color(255,255,255);
+                if (MRotulacion[i][j] == objetoM + 1) {
+                    c = new Color(255, 255, 255);
                     imagenF.setRGB(i, j, c.getRGB());
                 }
             }
         }
         return imagenF;
     }
+
+    public void Rectangulo() throws IOException {
+        menori = Imagen.getWidth();
+        mayori = 0;
+        menorj = Imagen.getHeight();
+        mayorj = 0;
+        BufferedImage imagenF = new BufferedImage(Imagen.getWidth(), Imagen.getHeight(), Imagen.getType());
+        for (int i = 0; i < Imagen.getWidth(); i++) {
+            for (int j = 0; j < Imagen.getHeight(); j++) {
+
+            }
+        }
+    }
+
 }
