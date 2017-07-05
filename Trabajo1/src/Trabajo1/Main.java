@@ -222,6 +222,12 @@ public class Main extends JFrame{
                 JMenuItem placa = new JMenuItem("Placas");
                 placa.addActionListener(menu);
                 proyecto.add(placa);
+                JMenuItem rotular = new JMenuItem("Rotular");
+                rotular.addActionListener(menu);
+                proyecto.add(rotular);
+                JMenuItem pintar = new JMenuItem("Pintar");
+                pintar.addActionListener(menu);
+                proyecto.add(pintar);
                 
                 
                 //grupo de botones
@@ -816,6 +822,45 @@ public class Main extends JFrame{
             if(comandoAccionm.equals("Placas")){
                 try {
                 bfImage=metodos.Placas();
+                metodos.Imagen=bfImage;
+                bfImage=metodos.Dilatacion();
+                metodos.Imagen=bfImage;
+                bfImage=metodos.Dilatacion();
+                metodos.Imagen=bfImage;
+                bfImage=metodos.Dilatacion();
+                metodos.Imagen=bfImage;
+                bfImage=metodos.Dilatacion();
+                metodos.Imagen=bfImage;
+                bfImage=metodos.Erosion();
+                metodos.Imagen=bfImage;
+                bfImage=metodos.Erosion();
+                metodos.Imagen=bfImage;
+                bfImage=metodos.Erosion();
+                metodos.Imagen=bfImage;
+                bfImage=metodos.Erosion();
+                metodos.Imagen=bfImage;
+                bfImage=metodos.Erosion();
+                metodos.Imagen=bfImage;
+                bfImage=metodos.Pintar();
+                BfImagenF=bfImage;
+                
+                } catch (IOException exep) {
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Rotular")){
+                try {
+                metodos.EncontrarFiguras();
+                } catch (IOException exep) {
+                    exep.printStackTrace();
+                }
+            }
+            if(comandoAccionm.equals("Pintar")){
+                try{
+                bfImage=metodos.Pintar();
                 BfImagenF=bfImage;
                 } catch (IOException exep) {
                     exep.printStackTrace();

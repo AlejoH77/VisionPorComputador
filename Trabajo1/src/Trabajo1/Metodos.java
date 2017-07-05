@@ -12,6 +12,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -33,6 +36,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.statistics.HistogramDataset;
 
+
 public class Metodos {
 
     public BufferedImage Imagen = null;
@@ -42,6 +46,14 @@ public class Metodos {
     public int[][] MatrizR = null;
     public int[][] MatrizG = null;
     public int[][] MatrizB = null;
+    public int[] ArregloObjetos = null;
+    public Queue<Color> cola = new LinkedList();
+    public int nivelmaxR = 0;
+    public int nivelminR = 256;
+    public int nivelmaxG = 0;
+    public int nivelminG = 256;
+    public int nivelmaxB = 0;
+    public int nivelminB = 256;
     public int[][] MatrizTransformacion = new int[3][3];
     public double[][] MatrizTransformacionD = new double[3][3];
     public int[][] Filtro = null;
@@ -554,36 +566,63 @@ public class Metodos {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         int conta = 1;
+        MatrizBool = new boolean[ancho][alto];
+        MRotulacion = new int[ancho][alto];
         Matriz = CalcularMatriz(Imagen);
         for (int j = 1; j < alto - 1; j++) {
             for (int i = 1; i < ancho - 1; i++) {
-                if (Matriz[i][j] == 0 && MatrizBool[i][j] == false) {
-                    if (MRotulacion[i - 1][j - 1] == 0 && MRotulacion[i][j - 1] == 0 && MRotulacion[i + 1][j - 1] == 0 && MRotulacion[i - 1][j] == 0 && MRotulacion[i + 1][j] == 0 && MRotulacion[i - 1][j + 1] == 0 && MRotulacion[i][j + 1] == 0 && MRotulacion[i + 1][j + 1] == 0) {
-                        MRotulacion[i][j] = conta;
-                        MatrizBool[i][j] = true;
-                        Rotular(i,j,conta);
-                        int aux=i;
+                if (Matriz[i][j] == 255 && MatrizBool[i][j] == false) {
+                    //if (MRotulacion[i - 1][j - 1] == 0 && MRotulacion[i][j - 1] == 0 && MRotulacion[i + 1][j - 1] == 0 && MRotulacion[i - 1][j] == 0 && MRotulacion[i + 1][j] == 0 && MRotulacion[i - 1][j + 1] == 0 && MRotulacion[i][j + 1] == 0 && MRotulacion[i + 1][j + 1] == 0) {
+                        //MRotulacion[i][j] = conta;
+                        //MatrizBool[i][j] = true;
+                        RotularRec(i,j,conta);
                         conta++;
-                    }else {
+                    /*}else {
                         if (MRotulacion[i - 1][j - 1] != 0) {
                             MRotulacion[i][j] = MRotulacion[i - 1][j - 1];
+                            MatrizBool[i][j] = true;
+                            Rotular(i,j,conta);
                         } else if (MRotulacion[i][j - 1] != 0) {
                             MRotulacion[i][j] = MRotulacion[i][j - 1];
+                            MatrizBool[i][j] = true;
+                            Rotular(i,j,conta);
                         } else if (MRotulacion[i + 1][j - 1] != 0) {
                             MRotulacion[i][j] = MRotulacion[i + 1][j - 1];
+                            MatrizBool[i][j] = true;
+                            Rotular(i,j,conta);
                         } else if(MRotulacion[i - 1][j]!=0){
                             MRotulacion[i][j] = MRotulacion[i - 1][j];
+                            MatrizBool[i][j] = true;
+                            Rotular(i,j,conta);
                         }else if(MRotulacion[i + 1][j]!=0){
                             MRotulacion[i][j] = MRotulacion[i - 1][j];
+                            MatrizBool[i][j] = true;
+                            Rotular(i,j,conta);
                         }else if(MRotulacion[i - 1][j + 1]!=0){
                             MRotulacion[i][j] = MRotulacion[i - 1][j + 1];
+                            MatrizBool[i][j] = true;
+                            Rotular(i,j,conta);
                         }else if(MRotulacion[i][j + 1]!=0){
                             MRotulacion[i][j] = MRotulacion[i][j + 1];
+                            MatrizBool[i][j] = true;
+                            Rotular(i,j,conta);
                         }else if(MRotulacion[i + 1][j + 1]!=0){
                             MRotulacion[i][j] = MRotulacion[i + 1][j + 1];
+                            MatrizBool[i][j] = true;
+                            Rotular(i,j,conta);
                         }
-                    }
+                    }*/
                 }
+            }
+        }
+        ArregloObjetos = new int[conta];
+        int nobjeto;
+        for (int j = 0; j < alto ; j++) {
+            for (int i = 0; i < ancho ; i++) {
+                nobjeto=MRotulacion[i][j]-1;
+                if(nobjeto>=0){
+                   ArregloObjetos[nobjeto]++; 
+                }             
             }
         }
         /*System.out.println(conta);
@@ -597,22 +636,39 @@ public class Metodos {
         System.out.println("");*/
     }
     
+    public void RotularRec(int i, int j, int conta){
+        MatrizBool[i][j]=true;
+        MRotulacion[i][j]=conta;
+        if(j-1>0 && Matriz[i][j-1]==255 && MatrizBool[i][j-1]==false){
+            RotularRec(i,j-1,conta);
+        }
+        if(j+1<Imagen.getHeight() && Matriz[i][j+1]==255 && MatrizBool[i][j+1]==false){
+            RotularRec(i,j+1,conta);
+        }
+        if(i-1> 0 && Matriz[i-1][j]==255 && MatrizBool[i-1][j]==false){
+            RotularRec(i-1,j,conta);
+        }
+        if(i+1<Imagen.getWidth() && Matriz[i+1][j]==255 && MatrizBool[i+1][j]==false){
+            RotularRec(i+1,j,conta);
+        }
+    }
+    
     public void Rotular(int i, int j, int conta){
         int abajo=j+1;
         int derecha=i+1;
         int izquierda=i-1;
-        while(izquierda>1 && Matriz[izquierda][j]==0 && MatrizBool[izquierda][j]==false){
+        while(izquierda>1 && Matriz[izquierda][j]==255 && MatrizBool[izquierda][j]==false){
             MRotulacion[izquierda][j]=conta;
             MatrizBool[izquierda][j]=true;
             izquierda--;
         }
-        while(derecha<Imagen.getWidth() && Matriz[derecha][j]==0 && MatrizBool[derecha][j]==false){
+        while(derecha<Imagen.getWidth() && Matriz[derecha][j]==255 && MatrizBool[derecha][j]==false){
             MRotulacion[derecha][j]=conta;
             MatrizBool[derecha][j]=true;
             derecha++;
         }
         if(abajo<Imagen.getHeight()-1 && i<Imagen.getWidth()-1){
-            if(Matriz[i][abajo]==0){
+            if(Matriz[i][abajo]==255){
                 MRotulacion[i][abajo]=conta;
                 MatrizBool[i][abajo]=true;
                 Rotular(i,abajo,conta);
@@ -623,8 +679,6 @@ public class Metodos {
     public void AreaCirculo() throws IOException {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
-        MatrizBool = new boolean[ancho][alto];
-        MRotulacion = new int[ancho][alto];
         EncontrarFiguras();
         int areac1 = 0;
         int areac2 = 0;
@@ -725,7 +779,7 @@ public class Metodos {
         return imagenF;
     }
 
-    public void MatricesColores() {
+    public void MatricesColores(BufferedImage Imagen) {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         MatrizR = new int[ancho][alto];
@@ -734,6 +788,24 @@ public class Metodos {
         for (int i = 0; i < ancho; i++) {
             for (int j = 0; j < alto; j++) {
                 Color c = new Color(Imagen.getRGB(i, j));
+                if(c.getRed() < nivelminR){
+                    nivelminR=c.getRed();
+                }
+                if(c.getRed() > nivelmaxR){
+                    nivelmaxR=c.getRed();
+                }
+                if(c.getGreen() < nivelminG){
+                    nivelminG=c.getGreen();
+                }
+                if(c.getGreen() > nivelmaxG){
+                    nivelmaxG=c.getGreen();
+                }
+                if(c.getBlue() < nivelminB){
+                    nivelminB=c.getBlue();
+                }
+                if(c.getBlue() > nivelmaxB){
+                    nivelmaxB=c.getBlue();
+                }
                 MatrizR[i][j] = c.getRed();
                 MatrizG[i][j] = c.getGreen();
                 MatrizB[i][j] = c.getBlue();
@@ -1382,12 +1454,13 @@ public class Metodos {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
-        MatricesColores();
+        imagenF = RGBtoYIQ(Imagen);
+        MatricesColores(imagenF);
         Color cb = new Color(255,255,255);
         Color cn = new Color(0,0,0);
         for (int i = 0; i < ancho; i++) {
             for (int j = 0; j < alto; j++) {
-                if(MatrizR[i][j]<=240 && MatrizR[i][j]>=170 && MatrizG[i][j]<=200 && MatrizG[i][j]>=130 && MatrizB[i][j]<=75 && MatrizB[i][j]>=5){
+                if(MatrizR[i][j]<=170 && MatrizR[i][j]>=110 && MatrizG[i][j]<=105 && MatrizG[i][j]>=45 && MatrizB[i][j]<=40 && MatrizB[i][j]>=0){
                     imagenF.setRGB(i, j, cb.getRGB());
                 }
                 else{
@@ -1397,5 +1470,68 @@ public class Metodos {
         }
         return imagenF;
     }
-
+    
+    public BufferedImage RGBtoYIQ(BufferedImage Imagen) throws IOException{
+        int ancho = Imagen.getWidth();
+        int alto = Imagen.getHeight();
+        BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
+        MatricesColores(Imagen);
+        Color c;
+        for (int i = 0; i < ancho; i++) {
+            for (int j = 0; j < alto; j++) {
+                int rojo = MatrizR[i][j];
+                int verde = MatrizG[i][j];
+                int azul = MatrizB[i][j];
+                int Y = (int) (0.299*rojo+0.587*verde+0.114*azul);
+                int I = (int) (0.596*rojo-0.274*verde-0.322*azul);
+                int Q = (int) (0.211*rojo-0.523*verde+0.312*azul);
+                Y = (Y > 255) ? 255 : Y;
+                Y = (Y < 0) ? 0 : Y;
+                I = (I > 255) ? 255 : I;
+                I = (I < 0) ? 0 : I;
+                Q = (Q > 255) ? 255 : Q;
+                Q = (Q < 0) ? 0 : Q;
+                c = new Color(Y,I,Q);
+                imagenF.setRGB(i, j, c.getRGB());
+            }
+        }
+        return imagenF;
+    }
+    
+    public BufferedImage Pintar() throws IOException{
+        int ancho = Imagen.getWidth();
+        int alto = Imagen.getHeight();
+        BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
+        EncontrarFiguras();
+        int objetoM=0;
+        for(int cvec = 0; cvec < ArregloObjetos.length; cvec++){
+            if(ArregloObjetos[cvec]>objetoM){
+                objetoM=cvec;
+            }
+        }
+        LlenarCola();
+        Color c;
+        for (int i = 0; i < ancho; i++) {
+            for (int j = 0; j < alto; j++) {
+                if(MRotulacion[i][j]==objetoM+1){
+                    c = new Color(255,255,255);
+                    imagenF.setRGB(i, j, c.getRGB());
+                }
+            }
+        }
+        return imagenF;
+    }
+    
+   public void LlenarCola(){
+       Color c1 = new Color(0,0,255);
+       Color c2 = new Color(0,255,0);
+       Color c3 = new Color(255,0,0);
+       Color c4 = new Color(0,20,255);
+       Color c5 = new Color(55,0,255);
+       cola.add(c1);
+       cola.add(c2);
+       cola.add(c3);
+       cola.add(c4);
+       cola.add(c5);
+   }
 }
