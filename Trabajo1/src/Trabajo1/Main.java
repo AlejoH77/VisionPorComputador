@@ -137,6 +137,9 @@ public class Main extends JFrame{
                 JMenuItem contraste = new JMenuItem("Contraste");
                 contraste.addActionListener(menu);
                 segmentacion.add(contraste);
+                JMenuItem negativo = new JMenuItem("Negativo");
+                negativo.addActionListener(menu);
+                segmentacion.add(negativo);
                 JMenu transftongris = new JMenu("Transformar en tonalidades de gris");
                 JMenuItem promsimple = new JMenuItem("Promedio Simple");
                 promsimple.addActionListener(menu);
@@ -217,11 +220,17 @@ public class Main extends JFrame{
                 JMenuItem circularidad = new JMenuItem("Circularidad de los 3 Circulos");
                 circularidad.addActionListener(menu);
                 circulos.add(circularidad);
+                JMenuItem rotular = new JMenuItem("Rotular");
+                rotular.addActionListener(menu);
+                figuras.add(rotular);
                 barraMenu.add(proyecto);
                 proyecto.setEnabled(false);
                 JMenuItem placa = new JMenuItem("Placas");
                 placa.addActionListener(menu);
                 proyecto.add(placa);
+                JMenuItem prepplaca = new JMenuItem("Preparar Placas");
+                prepplaca.addActionListener(menu);
+                proyecto.add(prepplaca);
                 
                 
                 //grupo de botones
@@ -622,6 +631,17 @@ public class Main extends JFrame{
                 modificado = new JLabel(ico);
                 imgFinal.setViewportView(modificado);
             }
+            if(comandoAccionm.equals("Negativo")){
+                try{
+                   bfImage=metodos.Negativo();
+                   BfImagenF=bfImage;
+                }catch (IOException exep){
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
             if(comandoAccionm.equals("Filtro Promedio")){
                 try{
                    bfImage=metodos.FiltroPromedio();
@@ -785,6 +805,17 @@ public class Main extends JFrame{
                 modificado = new JLabel(ico);
                 imgFinal.setViewportView(modificado);
             }
+            if(comandoAccionm.equals("Rotular")){
+                try {
+                    bfImage=metodos.RotularYPintar();
+                    BfImagenF=bfImage;
+                } catch (IOException exep) {
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
             if(comandoAccionm.equals("Área")){
                 try {
                     metodos.AreaCuadrado();
@@ -840,7 +871,19 @@ public class Main extends JFrame{
                 bfImage=metodos.Pintar();
                 BfImagenF=bfImage;
                 metodos.Rectangulo(bfImage);
-                bfImage=metodos.Recortar(BfImagenO);               
+                bfImage=metodos.Recortar(BfImagenO);
+                BfImagenF=bfImage;
+                } catch (IOException exep) {
+                    exep.printStackTrace();
+                }
+                ImageIcon ico = new ImageIcon(bfImage);
+                modificado = new JLabel(ico);
+                imgFinal.setViewportView(modificado);
+            }
+            if(comandoAccionm.equals("Preparar Placas")){
+                try {
+                bfImage=metodos.PrepararPlacas();
+                BfImagenF=bfImage;
                 } catch (IOException exep) {
                     exep.printStackTrace();
                 }

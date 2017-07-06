@@ -6,6 +6,7 @@ import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
@@ -437,7 +438,7 @@ public class Metodos {
             }
         }
         media = media / h;
-        JOptionPane.showMessageDialog(null, "Média: " + media);
+        //JOptionPane.showMessageDialog(null, "Média: " + media);
         return media;
     }
 
@@ -458,7 +459,7 @@ public class Metodos {
         int mediana = 0;
         Arrays.sort(VectorGrises);
         mediana = VectorGrises[h / 2];
-        JOptionPane.showMessageDialog(null, "Mediana: " + mediana);
+        //JOptionPane.showMessageDialog(null, "Mediana: " + mediana);
         return mediana;
     }
 
@@ -484,7 +485,7 @@ public class Metodos {
                 moda = i;
             }
         }
-        JOptionPane.showMessageDialog(null, "Moda: " + moda);
+        //JOptionPane.showMessageDialog(null, "Moda: " + moda);
         return moda;
     }
 
@@ -510,7 +511,7 @@ public class Metodos {
             }
         }
         varianza = totalMatriz / (ancho * alto);
-        JOptionPane.showMessageDialog(null, "Varianza: " + varianza);
+        //JOptionPane.showMessageDialog(null, "Varianza: " + varianza);
         return varianza;
     }
 
@@ -589,17 +590,17 @@ public class Metodos {
     public void RotularRec(int i, int j, int conta) {
         MatrizBool[i][j] = true;
         MRotulacion[i][j] = conta;
-        if (j - 1 > 0 && Matriz[i][j - 1] == 255 && MatrizBool[i][j - 1] == false) {
-            RotularRec(i, j - 1, conta);
-        }
-        if (j + 1 < Imagen.getHeight() && Matriz[i][j + 1] == 255 && MatrizBool[i][j + 1] == false) {
-            RotularRec(i, j + 1, conta);
-        }
         if (i - 1 > 0 && Matriz[i - 1][j] == 255 && MatrizBool[i - 1][j] == false) {
             RotularRec(i - 1, j, conta);
         }
         if (i + 1 < Imagen.getWidth() && Matriz[i + 1][j] == 255 && MatrizBool[i + 1][j] == false) {
             RotularRec(i + 1, j, conta);
+        }
+        if (j - 1 > 0 && Matriz[i][j - 1] == 255 && MatrizBool[i][j - 1] == false) {
+            RotularRec(i, j - 1, conta);
+        }
+        if (j + 1 < Imagen.getHeight() && Matriz[i][j + 1] == 255 && MatrizBool[i][j + 1] == false) {
+            RotularRec(i, j + 1, conta);
         }
     }
 
@@ -1419,7 +1420,7 @@ public class Metodos {
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
         EncontrarFiguras();
         int objetoM = 0;
-        for (int cvec = 0; cvec < ArregloObjetos.length; cvec++) {
+        for (int cvec = 0; cvec < ArregloObjetos.length; cvec++) {// cvec:cantidad de veces
             if (ArregloObjetos[cvec] > objetoM) {
                 objetoM = cvec;
             }
@@ -1464,10 +1465,14 @@ public class Metodos {
     }
 
     public BufferedImage Recortar(BufferedImage Imagen) throws IOException {
-        menori-=10;
+        /*menori-=10;
         menorj-=10;
         mayori+=15;
-        mayorj+=15;
+        mayorj+=15;*/
+        menori-=Imagen.getWidth()*0.03;
+        menorj-=Imagen.getWidth()*0.03;
+        mayori+=Imagen.getHeight()*0.06;
+        mayorj+=Imagen.getHeight()*0.06;
         int alto = (mayorj - menorj);
         int ancho = (mayori - menori);
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
@@ -1479,5 +1484,64 @@ public class Metodos {
         }
         return imagenF;
     }
-
+    
+    public BufferedImage PrepararPlacas() throws IOException {
+        int ancho = Imagen.getWidth();
+        int alto = Imagen.getHeight();
+        BufferedImage imagenP = new BufferedImage(ancho, alto, Imagen.getType());
+        BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
+        imagenF = Ampliar(2);
+        Imagen=imagenF;
+        imagenF=FiltroGauss();
+        int media=CalcularMedia()+10;
+        Imagen=imagenF;
+        imagenF=Limitarizacion(media);
+        Imagen=imagenF;
+        imagenF=Negativo();
+        return imagenF;
+    }
+    
+    public BufferedImage Negativo() throws IOException {
+        int ancho = Imagen.getWidth();
+        int alto = Imagen.getHeight();
+        BufferedImage imagenF = new BufferedImage(Imagen.getWidth(), Imagen.getHeight(), Imagen.getType());
+        Color cn = new Color(0,0,0);
+        Color cb = new Color(255,255,255);
+        for (int i = 0; i < ancho; i++) {
+            for (int j = 0; j < alto; j++) {
+                Color c = new Color(Imagen.getRGB(i, j));
+                int rojo = c.getRed();
+                int verde = c.getGreen();
+                int azul = c.getBlue();
+                int nrojo = 255-rojo;
+                int nverde = 255-verde;
+                int nazul = 255-azul;
+                c = new Color(nrojo, nverde, nazul);
+                imagenF.setRGB(i, j, c.getRGB());
+            }
+        }
+        return imagenF;
+    }
+    
+    public BufferedImage RotularYPintar() throws IOException {
+        int ancho = Imagen.getWidth();
+        int alto = Imagen.getHeight();
+        EncontrarFiguras();
+        BufferedImage imagenF = new BufferedImage(Imagen.getWidth(), Imagen.getHeight(), Imagen.getType());
+        Color[] colores = new Color[ArregloObjetos.length];
+        Random rn = new Random();
+        for(int h=0;h<colores.length;h++){
+            colores[h] = new Color(rn.nextInt(255),rn.nextInt(255),rn.nextInt(255));
+        }
+        for (int i = 0; i < ancho; i++) {
+            for (int j = 0; j < alto; j++) {
+                int numeroObj = MRotulacion[i][j]-1;
+                if(numeroObj>=0){
+                    imagenF.setRGB(i, j, colores[numeroObj].getRGB());
+                }
+                
+            }
+        }
+        return imagenF;
+    }
 }
