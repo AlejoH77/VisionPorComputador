@@ -229,7 +229,7 @@ public class Metodos {
         return moda;
     }
 
-    public int OFiltroGauss(int i, int j) {//operaciones filtro promedio
+    public int OFiltroGauss(int i, int j, int Matriz[][]) {//operaciones filtro promedio
         int resultado;
         resultado = (Matriz[i - 1][j - 1] * 1) + (Matriz[i][j - 1] * 2) + (Matriz[i + 1][j - 1] * 1) + (Matriz[i - 1][j] * 2) + (Matriz[i][j] * 4) + (Matriz[i + 1][j] * 2) + (Matriz[i - 1][j + 1] * 1) + (Matriz[i][j + 1] * 2) + (Matriz[i + 1][j + 1] * 1);
         resultado = (resultado) / 16;
@@ -1135,12 +1135,19 @@ public class Metodos {
         int ancho = Imagen.getWidth();
         int alto = Imagen.getHeight();
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
-        imagenF = ImagenGris();
+        MatricesColores(Imagen);
         for (int i = 1; i < ancho - 1; i++) {
             for (int j = 1; j < alto - 1; j++) {
-                int TonoGris = OFiltroGauss(i, j);
-                TonoGris = (TonoGris > 255) ? 255 : TonoGris;
-                Color c = new Color(TonoGris, TonoGris, TonoGris);
+                int rojo = OFiltroGauss(i, j, MatrizR);
+                int verde = OFiltroGauss(i, j, MatrizG);
+                int azul = OFiltroGauss(i, j, MatrizB);
+                rojo = (rojo > 255) ? 255 : rojo;
+                rojo = (rojo < 0) ? 0 : rojo;
+                verde = (verde > 255) ? 255 : verde;
+                verde = (verde < 0) ? 0 : verde;
+                azul = (azul > 255) ? 255 : azul;
+                azul = (azul < 0) ? 0 : azul;
+                Color c = new Color(rojo, verde, azul);
                 imagenF.setRGB(i, j, c.getRGB());
             }
         }
@@ -1429,17 +1436,48 @@ public class Metodos {
         return imagenF;
     }
 
-    public void Rectangulo() throws IOException {
+    public void Rectangulo(BufferedImage Imagen) throws IOException {
         menori = Imagen.getWidth();
         mayori = 0;
         menorj = Imagen.getHeight();
         mayorj = 0;
         BufferedImage imagenF = new BufferedImage(Imagen.getWidth(), Imagen.getHeight(), Imagen.getType());
+        Matriz = CalcularMatriz(Imagen);
         for (int i = 0; i < Imagen.getWidth(); i++) {
             for (int j = 0; j < Imagen.getHeight(); j++) {
-
+                if (Matriz[i][j] == 255) {
+                    if (i < menori) {
+                        menori = i;
+                    }
+                    if (j < menorj) {
+                        menorj = j;
+                    }
+                    if (i > mayori) {
+                        mayori = i;
+                    }
+                    if (j > mayorj) {
+                        mayorj = j;
+                    }
+                }
             }
         }
+    }
+
+    public BufferedImage Recortar(BufferedImage Imagen) throws IOException {
+        menori-=10;
+        menorj-=10;
+        mayori+=15;
+        mayorj+=15;
+        int alto = (mayorj - menorj);
+        int ancho = (mayori - menori);
+        BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
+        for (int i = menori; i < mayori; i++) {
+            for (int j = menorj; j < mayorj; j++) {
+                Color c = new Color(Imagen.getRGB(i, j));
+                imagenF.setRGB(i-menori, j-menorj, c.getRGB());
+            }
+        }
+        return imagenF;
     }
 
 }

@@ -815,6 +815,8 @@ public class Main extends JFrame{
             }
             if(comandoAccionm.equals("Placas")){
                 try {
+                //bfImage=metodos.FiltroGauss();
+                //metodos.Imagen=bfImage;
                 bfImage=metodos.Placas();
                 metodos.Imagen=bfImage;
                 bfImage=metodos.Dilatacion();
@@ -837,7 +839,8 @@ public class Main extends JFrame{
                 metodos.Imagen=bfImage;
                 bfImage=metodos.Pintar();
                 BfImagenF=bfImage;
-                
+                metodos.Rectangulo(bfImage);
+                bfImage=metodos.Recortar(BfImagenO);               
                 } catch (IOException exep) {
                     exep.printStackTrace();
                 }
