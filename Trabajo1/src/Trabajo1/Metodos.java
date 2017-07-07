@@ -1470,9 +1470,21 @@ public class Metodos {
         mayori+=15;
         mayorj+=15;*/
         menori-=Imagen.getWidth()*0.03;
-        menorj-=Imagen.getWidth()*0.03;
-        mayori+=Imagen.getHeight()*0.06;
+        menorj-=Imagen.getHeight()*0.03;
+        mayori+=Imagen.getWidth()*0.06;
         mayorj+=Imagen.getHeight()*0.06;
+        if(menori<0){
+            menori=0;
+        }
+        if(menorj<0){
+            menorj=0;
+        }
+        if(mayori>=Imagen.getWidth()){
+            mayori=Imagen.getWidth()-1;
+        }
+        if(mayorj>=Imagen.getHeight()){
+            mayorj=Imagen.getHeight()-1;
+        }
         int alto = (mayorj - menorj);
         int ancho = (mayori - menori);
         BufferedImage imagenF = new BufferedImage(ancho, alto, Imagen.getType());
@@ -1493,9 +1505,9 @@ public class Metodos {
         imagenF = Ampliar(2);
         Imagen=imagenF;
         imagenF=FiltroGauss();
-        int media=CalcularMedia()+10;
+        /*int media=CalcularMedia()+10;
         Imagen=imagenF;
-        imagenF=Limitarizacion(media);
+        imagenF=Limitarizacion(media);*/
         Imagen=imagenF;
         imagenF=Negativo();
         return imagenF;
